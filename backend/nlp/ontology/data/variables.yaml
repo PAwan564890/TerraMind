@@ -1,0 +1,81 @@
+# Environmental variables: canonical ID -> unit + surface forms per language.
+# Keys must match the Variable enum in backend/nlp/query/enums.py.
+# REVIEW STATUS: Hindi and Nepali aliases are drafted and NOT yet reviewed by a
+# fluent speaker.
+
+TEMPERATURE:
+  unit: "°C"
+  aliases:
+    en: [temperature, temp]
+    hi: [तापमान, तापक्रम]
+    ne: [तापक्रम, तापमान]
+
+PRECIPITATION:
+  unit: mm
+  aliases:
+    en: [rain, rainfall, precipitation]
+    hi: [बारिश, वर्षा, बरसात]
+    ne: [वर्षा, झरी, वर्षात]
+
+HUMIDITY:
+  unit: "%"
+  aliases:
+    en: [humidity]
+    hi: [नमी, आर्द्रता]
+    ne: [आर्द्रता, ओसिलोपन]
+
+WIND_SPEED:
+  unit: m/s
+  aliases:
+    en: [wind speed, wind]
+    hi: [हवा की गति, हवा की रफ्तार, पवन गति]
+    ne: [हावाको गति, हावाको वेग]
+
+AIR_QUALITY:
+  unit: AQI
+  aliases:
+    en: [air quality, aqi, air pollution]
+    hi: [वायु गुणवत्ता, हवा की गुणवत्ता, वायु प्रदूषण]
+    ne: [वायु गुणस्तर, हावाको गुणस्तर, वायु प्रदूषण]
+
+NDVI:
+  unit: index
+  aliases:
+    en: [ndvi, vegetation, vegetation index, vegetation cover, greenery]
+    hi: [वनस्पति, हरियाली, वनस्पति सूचकांक]
+    ne: [वनस्पति, हरियाली, वनस्पति सूचकाङ्क]
+
+SOIL_MOISTURE:
+  unit: "%"
+  aliases:
+    en: [soil moisture]
+    hi: [मिट्टी की नमी, मृदा नमी]
+    ne: [माटोको चिस्यान, माटोको आर्द्रता]
+
+LAND_COVER:
+  unit: class
+  aliases:
+    en: [land cover, land use]
+    hi: [भूमि आवरण, भू-आवरण, भूमि उपयोग]
+    ne: [भू-आवरण, भूमि आवरण, भू-उपयोग]
+
+LAND_SURFACE_TEMPERATURE:
+  unit: "°C"
+  aliases:
+    en: [land surface temperature, lst, surface temperature]
+    hi: [भूमि सतह तापमान, सतह का तापमान]
+    ne: [जमिनको सतहको तापक्रम, सतहको तापक्रम]
+
+ELEVATION:
+  unit: m
+  aliases:
+    en: [elevation, altitude, height]
+    hi: [ऊंचाई, ऊँचाई]
+    ne: [उचाइ, उँचाइ]
+
+SLOPE:
+  unit: degrees
+  aliases:
+    en: [slope, gradient]
+    hi: [ढलान, ढाल]
+    ne: [भिरालोपन, ढलान]

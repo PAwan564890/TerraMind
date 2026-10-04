@@ -40,6 +40,7 @@ class InputConfig(_Strict):
 class PathsConfig(_Strict):
     data_dir: Path
     models_dir: Path
+    ontology_dir: Path
 
 
 class Settings(_Strict):
@@ -84,5 +85,6 @@ def load_settings(config_path: str | Path | None = None) -> Settings:
     resolved_paths = PathsConfig(
         data_dir=_resolve(settings.paths.data_dir),
         models_dir=_resolve(settings.paths.models_dir),
+        ontology_dir=_resolve(settings.paths.ontology_dir),
     )
     return settings.model_copy(update={"paths": resolved_paths})

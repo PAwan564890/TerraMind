@@ -1,0 +1,47 @@
+# Disaster types: canonical ID -> risk target + surface forms per language.
+# Keys must match the Disaster enum. risk_target is null when TerraMind does
+# not plan a risk model for that hazard.
+# REVIEW STATUS: Hindi and Nepali aliases are drafted and NOT yet reviewed by a
+# fluent speaker.
+
+FLOOD:
+  risk_target: FLOOD_RISK
+  aliases:
+    en: [flood, floods, flooding]
+    hi: [बाढ़]
+    ne: [बाढी]
+
+LANDSLIDE:
+  risk_target: LANDSLIDE_RISK
+  aliases:
+    en: [landslide, landslides, landslip]
+    hi: [भूस्खलन]
+    ne: [पहिरो, भूस्खलन]
+
+WILDFIRE:
+  risk_target: WILDFIRE_RISK
+  aliases:
+    en: [wildfire, wildfires, forest fire]
+    hi: [जंगल की आग, वनाग्नि]
+    ne: [डढेलो, वन डढेलो]
+
+EARTHQUAKE:
+  risk_target: null
+  aliases:
+    en: [earthquake, earthquakes, quake]
+    hi: [भूकंप, भूकम्प]
+    ne: [भूकम्प, भुइँचालो]
+
+GLOF:
+  risk_target: null
+  aliases:
+    en: [glof, glacial lake outburst flood, glacial lake outburst]
+    hi: [हिमनद झील विस्फोट, हिमनद झील फटना]
+    ne: [हिमताल विस्फोट, हिमताल विस्फोटन बाढी]
+
+CLOUDBURST:
+  risk_target: null
+  aliases:
+    en: [cloudburst, cloud burst]
+    hi: [बादल फटना]
+    ne: [बादल फाट्ने, मेघ विस्फोट]

@@ -27,7 +27,7 @@ def test_unknown_key_is_rejected(tmp_path):
         "project: {name: T, region: S, seed: 1}\n"
         "languages: {supported: [en]}\n"
         "input: {max_query_chars: 10, typo_key: 1}\n"
-        "paths: {data_dir: d, models_dir: m}\n",
+        "paths: {data_dir: d, models_dir: m, ontology_dir: o}\n",
         encoding="utf-8",
     )
     with pytest.raises(ConfigError, match="typo_key"):
@@ -40,7 +40,7 @@ def test_unsupported_language_is_rejected(tmp_path):
         "project: {name: T, region: S, seed: 1}\n"
         "languages: {supported: [en, fr]}\n"
         "input: {max_query_chars: 10}\n"
-        "paths: {data_dir: d, models_dir: m}\n",
+        "paths: {data_dir: d, models_dir: m, ontology_dir: o}\n",
         encoding="utf-8",
     )
     with pytest.raises(ConfigError):
@@ -53,7 +53,7 @@ def test_env_var_selects_config(tmp_path, monkeypatch):
         "project: {name: Alt, region: S, seed: 7}\n"
         "languages: {supported: [ne]}\n"
         "input: {max_query_chars: 10}\n"
-        "paths: {data_dir: d, models_dir: m}\n",
+        "paths: {data_dir: d, models_dir: m, ontology_dir: o}\n",
         encoding="utf-8",
     )
     monkeypatch.setenv("TERRAMIND_CONFIG", str(alt))

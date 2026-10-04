@@ -16,3 +16,4 @@ input:
 paths:
   data_dir: backend/nlp/data
   models_dir: models
+  ontology_dir: backend/nlp/ontology/data

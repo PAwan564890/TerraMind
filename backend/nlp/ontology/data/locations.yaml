@@ -1,0 +1,235 @@
+# Gazetteer for Sikkim: location ID -> name, type, parent, surface forms.
+#
+# District names follow the reorganisation of 21 December 2021 (North -> Mangan,
+# East -> Gangtok, South -> Namchi, West -> Gyalshing; Pakyong and Soreng new).
+# Source: https://en.wikipedia.org/wiki/List_of_districts_of_Sikkim
+# (accessed 2026-10-05). The old names stay as aliases because people use them.
+#
+# A bare town name ("Gangtok") resolves to the TOWN. The district needs the
+# word "district" or its old name ("East Sikkim").
+#
+# REVIEW STATUS: Devanagari spellings are drafted and NOT yet reviewed by a
+# fluent speaker. Town-to-district assignments should be re-checked against an
+# official source when the data layer is built.
+
+loc:sikkim:
+  name: Sikkim
+  type: STATE
+  parent: null
+  aliases:
+    en: [Sikkim]
+    hi: [सिक्किम]
+    ne: [सिक्किम]
+
+# --- Districts ---------------------------------------------------------------
+
+loc:mangan_district:
+  name: Mangan District
+  type: DISTRICT
+  parent: loc:sikkim
+  aliases:
+    en: [Mangan district, North Sikkim, North district]
+    hi: [मंगन जिला, उत्तर सिक्किम, उत्तरी सिक्किम]
+    ne: [मङ्गन जिल्ला, मंगन जिल्ला, उत्तर सिक्किम, उत्तरी सिक्किम]
+
+loc:gangtok_district:
+  name: Gangtok District
+  type: DISTRICT
+  parent: loc:sikkim
+  aliases:
+    en: [Gangtok district, East Sikkim, East district]
+    hi: [गंगटोक जिला, पूर्व सिक्किम, पूर्वी सिक्किम]
+    ne: [गान्तोक जिल्ला, पूर्व सिक्किम, पूर्वी सिक्किम]
+
+loc:namchi_district:
+  name: Namchi District
+  type: DISTRICT
+  parent: loc:sikkim
+  aliases:
+    en: [Namchi district, South Sikkim, South district]
+    hi: [नामची जिला, दक्षिण सिक्किम, दक्षिणी सिक्किम]
+    ne: [नाम्ची जिल्ला, नामची जिल्ला, दक्षिण सिक्किम, दक्षिणी सिक्किम]
+
+loc:gyalshing_district:
+  name: Gyalshing District
+  type: DISTRICT
+  parent: loc:sikkim
+  aliases:
+    en: [Gyalshing district, Geyzing district, West Sikkim, West district]
+    hi: [ग्यालशिंग जिला, पश्चिम सिक्किम, पश्चिमी सिक्किम]
+    ne: [ग्याल्सिङ जिल्ला, पश्चिम सिक्किम, पश्चिमी सिक्किम]
+
+loc:pakyong_district:
+  name: Pakyong District
+  type: DISTRICT
+  parent: loc:sikkim
+  aliases:
+    en: [Pakyong district]
+    hi: [पाक्योंग जिला]
+    ne: [पाक्योङ जिल्ला]
+
+loc:soreng_district:
+  name: Soreng District
+  type: DISTRICT
+  parent: loc:sikkim
+  aliases:
+    en: [Soreng district]
+    hi: [सोरेंग जिला]
+    ne: [सोरेङ जिल्ला]
+
+# --- Towns -------------------------------------------------------------------
+
+loc:gangtok:
+  name: Gangtok
+  type: TOWN
+  parent: loc:gangtok_district
+  aliases:
+    en: [Gangtok, Gantok]
+    hi: [गंगटोक, गंगतोक]
+    ne: [गान्तोक, गांतोक, गान्तोग]
+
+loc:mangan:
+  name: Mangan
+  type: TOWN
+  parent: loc:mangan_district
+  aliases:
+    en: [Mangan]
+    hi: [मंगन]
+    ne: [मङ्गन]
+
+loc:namchi:
+  name: Namchi
+  type: TOWN
+  parent: loc:namchi_district
+  aliases:
+    en: [Namchi]
+    hi: [नामची]
+    ne: [नाम्ची]
+
+loc:gyalshing:
+  name: Gyalshing
+  type: TOWN
+  parent: loc:gyalshing_district
+  aliases:
+    en: [Gyalshing, Geyzing, Gyalzing]
+    hi: [ग्यालशिंग, गेजिंग]
+    ne: [ग्याल्सिङ, गेजिङ]
+
+loc:pakyong:
+  name: Pakyong
+  type: TOWN
+  parent: loc:pakyong_district
+  aliases:
+    en: [Pakyong]
+    hi: [पाक्योंग]
+    ne: [पाक्योङ]
+
+loc:soreng:
+  name: Soreng
+  type: TOWN
+  parent: loc:soreng_district
+  aliases:
+    en: [Soreng]
+    hi: [सोरेंग]
+    ne: [सोरेङ]
+
+loc:pelling:
+  name: Pelling
+  type: TOWN
+  parent: loc:gyalshing_district
+  aliases:
+    en: [Pelling]
+    hi: [पेलिंग]
+    ne: [पेलिङ]
+
+loc:lachung:
+  name: Lachung
+  type: TOWN
+  parent: loc:mangan_district
+  aliases:
+    en: [Lachung]
+    hi: [लाचुंग]
+    ne: [लाचुङ]
+
+loc:lachen:
+  name: Lachen
+  type: TOWN
+  parent: loc:mangan_district
+  aliases:
+    en: [Lachen]
+    hi: [लाचेन]
+    ne: [लाचेन]
+
+loc:chungthang:
+  name: Chungthang
+  type: TOWN
+  parent: loc:mangan_district
+  aliases:
+    en: [Chungthang]
+    hi: [चुंगथांग]
+    ne: [चुङथाङ]
+
+loc:singtam:
+  name: Singtam
+  type: TOWN
+  parent: loc:gangtok_district
+  aliases:
+    en: [Singtam]
+    hi: [सिंगताम]
+    ne: [सिङताम]
+
+loc:rangpo:
+  name: Rangpo
+  type: TOWN
+  parent: loc:pakyong_district
+  aliases:
+    en: [Rangpo]
+    hi: [रंगपो]
+    ne: [रङ्पो]
+
+loc:jorethang:
+  name: Jorethang
+  type: TOWN
+  parent: loc:namchi_district
+  aliases:
+    en: [Jorethang]
+    hi: [जोरेथांग]
+    ne: [जोरथाङ]
+
+loc:ravangla:
+  name: Ravangla
+  type: TOWN
+  parent: loc:namchi_district
+  aliases:
+    en: [Ravangla, Rabongla, Ravongla]
+    hi: [रवांगला]
+    ne: [राबाङ्ला]
+
+loc:yuksom:
+  name: Yuksom
+  type: TOWN
+  parent: loc:gyalshing_district
+  aliases:
+    en: [Yuksom, Yuksam]
+    hi: [युकसोम]
+    ne: [युक्सम]
+
+# --- Rivers ------------------------------------------------------------------
+
+loc:teesta:
+  name: Teesta
+  type: RIVER
+  parent: loc:sikkim
+  aliases:
+    en: [Teesta, Tista, Teesta river]
+    hi: [तीस्ता, तीस्ता नदी]
+    ne: [टिस्टा, तिस्ता, टिस्टा नदी]
+
+loc:rangeet:
+  name: Rangeet
+  type: RIVER
+  parent: loc:sikkim
+  aliases:
+    en: [Rangeet, Rangit, Rangeet river]
+    hi: [रंगीत, रंगीत नदी]
+    ne: [रङ्गीत, रङ्गीत नदी]

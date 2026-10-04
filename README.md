@@ -2,7 +2,7 @@
 
 AI-powered Earth system digital twin for Sikkim. Work in progress.
 
-**Status:** Phase 0 (project setup) complete. No NLP components are implemented yet.
+**Status:** Phase 1 (NLP specification) complete: taxonomy enums, ontology and gazetteer, structured-query schema. No models are trained yet.
 
 ## Setup (Windows PowerShell)
 
@@ -23,6 +23,8 @@ python -m pytest
 ```text
 backend/core/   config loading and logging, shared by every layer
 backend/nlp/    multilingual NLP subsystem (built phase by phase)
+  ontology/     variables, disasters and Sikkim gazetteer (YAML) + loader
+  query/        enums, per-intent spec, Pydantic structured-query schema
 configs/        nlp.yaml: all tunable settings
 tests/          mirrors backend/
 ```
