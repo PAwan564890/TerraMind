@@ -1,0 +1,6 @@
+# Phase 0 dependencies only. Each later phase adds what it needs
+# (torch/transformers in Phase 5, sentence-transformers in Phase 8, fastapi in Phase 13).
+# Versions are pinned to what was installed and tested on Python 3.12.
+pydantic==2.13.5
+PyYAML==6.0.3
+pytest==8.4.2

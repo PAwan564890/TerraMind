@@ -1,0 +1,4 @@
+[tool.pytest.ini_options]
+# Lets tests write `from backend.core import ...` without installing the package.
+pythonpath = ["."]
+testpaths = ["tests"]
