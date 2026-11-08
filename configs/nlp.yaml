@@ -17,3 +17,92 @@ paths:
   data_dir: backend/nlp/data
   models_dir: models
   ontology_dir: backend/nlp/ontology/data
+
+dataset:
+  fills_per_template: 12
+  val_fraction: 0.15
+  test_fraction: 0.15
+  heldout_location_rate: 0.5
+  lowercase_rate: 0.15
+  drop_punctuation_rate: 0.2
+
+language_detection:
+  ngram_min: 1
+  ngram_max: 3
+  fragments_per_row: 2
+  # Provisional. Phase 11 re-selects all thresholds from validation data.
+  min_confidence: 0.6
+
+intent:
+  model_name: xlm-roberta-base
+  dev_model_name: intfloat/multilingual-e5-small
+  # dev = small CPU model, full = xlm-roberta-base. Rerun scripts/select_thresholds.py
+  # after changing this: thresholds belong to one trained model.
+  active_run: full
+  max_length: 64
+  batch_size: 16
+  # Starting values, not tuned optima. Try 1e-5 to 5e-5 for the learning rate.
+  learning_rate: 2.0e-5
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  max_epochs: 10
+  patience: 2
+  max_grad_norm: 1.0
+  class_weighting: false
+  seeds: [42, 43, 44]
+
+ner:
+  model_name: xlm-roberta-base
+  dev_model_name: intfloat/multilingual-e5-small
+  # dev = small CPU model, full = xlm-roberta-base. Rerun scripts/select_thresholds.py
+  # after changing this: thresholds belong to one trained model.
+  active_run: full
+  max_length: 64
+  batch_size: 16
+  learning_rate: 3.0e-5
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  max_epochs: 10
+  patience: 2
+  max_grad_norm: 1.0
+  seeds: [42, 43, 44]
+
+normalization:
+  fuzzy_threshold: 0.85
+  fuzzy_min_chars: 4
+  fuzzy_margin: 0.03
+
+embeddings:
+  # Chosen over the MiniLM paraphrase model on cross-language retrieval
+  # (mean Recall@1 0.81 against 0.47 on 150 generated triples).
+  model_name: intfloat/multilingual-e5-small
+  prefix: "query: "
+  candidates:
+    - {name: intfloat/multilingual-e5-small, prefix: "query: "}
+    - {name: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2, prefix: ""}
+  max_length: 64
+  batch_size: 32
+  neighbours: 5
+  parallel_triples: 150
+  # 0.90 is the lowest threshold in the sweep at which no unrelated word was
+  # matched. It recovers only about 30% of synonyms; see docs or the script output.
+  alias_threshold: 0.9
+  alias_margin: 0.01
+
+context:
+  max_slot_age_turns: 5
+  max_idle_seconds: 1800
+  max_sessions: 1000
+
+pipeline:
+  use_embedding_fallback: false
+
+decision:
+  target_answered_error: 0.05
+  error_bound_quantile: 0.9
+  bootstrap_resamples: 1000
+  in_domain_rejection_target: 0.02
+  ood_veto_target: 0.05
+  default_trend_years: 10
+  max_percent_change: 500
+  max_absolute_change: 20

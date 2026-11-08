@@ -2,6 +2,12 @@
 # Keys must match the Variable enum in backend/nlp/query/enums.py.
 # REVIEW STATUS: Hindi and Nepali aliases are drafted and NOT yet reviewed by a
 # fluent speaker.
+#
+# `aliases` are nouns that name the variable ("temperature"). They fill the
+# noun slots of the dataset templates.
+# `descriptors` are words that imply the variable without naming it ("cold",
+# "humid"). They are recognised at lookup time and have their own templates,
+# but never fill a noun slot ("the cold trend" is not a sentence).
 
 TEMPERATURE:
   unit: "°C"
@@ -9,6 +15,10 @@ TEMPERATURE:
     en: [temperature, temp]
     hi: [तापमान, तापक्रम]
     ne: [तापक्रम, तापमान]
+  descriptors:
+    en: [cold, hot, warm, cool, chilly]
+    hi: [ठंड, गर्मी, सर्दी]
+    ne: [जाडो, गर्मी, चिसो]
 
 PRECIPITATION:
   unit: mm
@@ -16,6 +26,8 @@ PRECIPITATION:
     en: [rain, rainfall, precipitation]
     hi: [बारिश, वर्षा, बरसात]
     ne: [वर्षा, झरी, वर्षात]
+  descriptors:
+    en: [rainy, wet]
 
 HUMIDITY:
   unit: "%"
@@ -23,6 +35,10 @@ HUMIDITY:
     en: [humidity]
     hi: [नमी, आर्द्रता]
     ne: [आर्द्रता, ओसिलोपन]
+  descriptors:
+    en: [humid, damp]
+    hi: [उमस]
+    ne: [ओसिलो]
 
 WIND_SPEED:
   unit: m/s

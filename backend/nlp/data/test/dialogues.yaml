@@ -1,0 +1,235 @@
+# Multi-turn test conversations.
+#
+# Each turn has:
+#   text    what the user typed
+#   parse   what a PERFECT parser would extract from this turn alone
+#           (language, intent, slots; `fragment: true` for entity-only turns).
+#           For a fragment, `intent` is what the classifier would say with no
+#           context, which is often wrong on purpose.
+#   expect  the result after context resolution
+#
+# In Phase 9 the context rules are tested alone, fed with `parse`. In the
+# end-to-end evaluation the same file is run through the real models, using
+# only `text` and `expect`.
+#
+# Hand-written. 18 dialogues, 43 turns; the design target was 40 dialogues.
+# REVIEW STATUS: Hindi and Nepali text is NOT yet reviewed by a fluent speaker.
+
+- id: brief_cross_language
+  note: The example from the project brief. Language changes every turn.
+  turns:
+    - text: "What is the temperature in Gangtok?"
+      parse: {language: en, intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE]}
+      expect: {intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE], context_used: []}
+    - text: "और बारिश?"
+      parse: {language: hi, intent: WEATHER_QUERY, variables: [PRECIPITATION], fragment: true}
+      expect: {intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [PRECIPITATION], context_used: [intent, locations]}
+    - text: "भोलिको अवस्था कस्तो हुन्छ?"
+      parse: {language: ne, intent: WEATHER_QUERY, time_period: {type: relative_future, value: 1, unit: day}}
+      expect:
+        intent: WEATHER_QUERY
+        locations: [loc:gangtok]
+        variables: [PRECIPITATION]
+        time_period: {type: relative_future, value: 1, unit: day}
+        context_used: [locations, variables]
+
+- id: brief_english
+  turns:
+    - text: "What is the temperature in Gangtok?"
+      parse: {language: en, intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE]}
+      expect: {intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE], context_used: []}
+    - text: "What about rainfall?"
+      parse: {language: en, intent: WEATHER_QUERY, variables: [PRECIPITATION], fragment: true}
+      expect: {intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [PRECIPITATION], context_used: [intent, locations]}
+    - text: "What about tomorrow?"
+      parse: {language: en, intent: WEATHER_QUERY, time_period: {type: relative_future, value: 1, unit: day}, fragment: true}
+      expect:
+        intent: WEATHER_QUERY
+        locations: [loc:gangtok]
+        variables: [PRECIPITATION]
+        time_period: {type: relative_future, value: 1, unit: day}
+        context_used: [intent, locations, variables]
+
+- id: location_switch_keeps_time
+  turns:
+    - text: "What is the rainfall trend in Gangtok over the last five years?"
+      parse: {language: en, intent: CLIMATE_TREND, locations: [loc:gangtok], variables: [PRECIPITATION], time_period: {type: relative_past, value: 5, unit: year}}
+      expect: {intent: CLIMATE_TREND, locations: [loc:gangtok], variables: [PRECIPITATION], context_used: []}
+    - text: "What about Namchi?"
+      parse: {language: en, intent: GEOLOCATION_QUERY, locations: [loc:namchi], fragment: true}
+      expect:
+        intent: CLIMATE_TREND
+        locations: [loc:namchi]
+        variables: [PRECIPITATION]
+        time_period: {type: relative_past, value: 5, unit: year}
+        context_used: [intent, variables, time_period]
+
+- id: answer_to_a_clarification
+  note: The first turn lacks a location; the user then supplies only the place.
+  turns:
+    - text: "What is the temperature?"
+      parse: {language: en, intent: WEATHER_QUERY, variables: [TEMPERATURE]}
+      expect: {intent: WEATHER_QUERY, locations: [], variables: [TEMPERATURE], context_used: []}
+    - text: "Gangtok"
+      parse: {language: en, intent: GEOLOCATION_QUERY, locations: [loc:gangtok], fragment: true}
+      expect: {intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE], context_used: [intent, variables]}
+
+- id: hindi_clarification
+  turns:
+    - text: "बारिश का रुझान दिखाओ"
+      parse: {language: hi, intent: CLIMATE_TREND, variables: [PRECIPITATION]}
+      expect: {intent: CLIMATE_TREND, locations: [], variables: [PRECIPITATION], context_used: []}
+    - text: "मंगन में"
+      parse: {language: hi, intent: GEOLOCATION_QUERY, locations: [loc:mangan], fragment: true}
+      expect: {intent: CLIMATE_TREND, locations: [loc:mangan], variables: [PRECIPITATION], context_used: [intent, variables]}
+
+- id: scenario_inherits_location_but_is_not_stored
+  note: >
+    A hypothetical borrows the place under discussion, but does not become the
+    topic: the next follow-up returns to the weather question.
+  turns:
+    - text: "What is the temperature in Gangtok?"
+      parse: {language: en, intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE]}
+      expect: {intent: WEATHER_QUERY, locations: [loc:gangtok], context_used: []}
+    - text: "What happens if rainfall increases by 20%?"
+      parse:
+        language: en
+        intent: SCENARIO_ANALYSIS
+        variables: [PRECIPITATION]
+        scenario: {variable: PRECIPITATION, change: 20, unit: percent, direction: increase}
+      expect: {intent: SCENARIO_ANALYSIS, locations: [loc:gangtok], variables: [PRECIPITATION], context_used: [locations]}
+    - text: "What about humidity?"
+      parse: {language: en, intent: WEATHER_QUERY, variables: [HUMIDITY], fragment: true}
+      expect: {intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [HUMIDITY], context_used: [intent, locations]}
+
+- id: out_of_domain_does_not_disturb_context
+  turns:
+    - text: "मंगन में बारिश का स्तर क्या है?"
+      parse: {language: hi, intent: WEATHER_QUERY, locations: [loc:mangan], variables: [PRECIPITATION]}
+      expect: {intent: WEATHER_QUERY, locations: [loc:mangan], context_used: []}
+    - text: "कल का क्रिकेट मैच किसने जीता?"
+      parse: {language: hi, intent: OUT_OF_DOMAIN}
+      expect: {intent: OUT_OF_DOMAIN, locations: [], variables: [], context_used: []}
+    - text: "और तापमान?"
+      parse: {language: hi, intent: WEATHER_QUERY, variables: [TEMPERATURE], fragment: true}
+      expect: {intent: WEATHER_QUERY, locations: [loc:mangan], variables: [TEMPERATURE], context_used: [intent, locations]}
+
+- id: disaster_followup_changes_the_intent
+  note: The classifier calls the fragment a weather query; the disaster overrides that.
+  turns:
+    - text: "What is the temperature in Gangtok?"
+      parse: {language: en, intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE]}
+      expect: {intent: WEATHER_QUERY, context_used: []}
+    - text: "And landslides?"
+      parse: {language: en, intent: WEATHER_QUERY, disasters: [LANDSLIDE], fragment: true}
+      expect: {intent: DISASTER_RISK, locations: [loc:gangtok], variables: [], disasters: [LANDSLIDE], context_used: [locations]}
+
+- id: variable_followup_after_a_risk_question
+  turns:
+    - text: "What is the flood risk in Rangpo?"
+      parse: {language: en, intent: DISASTER_RISK, locations: [loc:rangpo], disasters: [FLOOD]}
+      expect: {intent: DISASTER_RISK, locations: [loc:rangpo], disasters: [FLOOD], context_used: []}
+    - text: "What about rainfall?"
+      parse: {language: en, intent: WEATHER_QUERY, variables: [PRECIPITATION], fragment: true}
+      expect: {intent: WEATHER_QUERY, locations: [loc:rangpo], variables: [PRECIPITATION], disasters: [], context_used: [locations]}
+
+- id: comparison_followup_keeps_both_places
+  turns:
+    - text: "Compare rainfall in North Sikkim and South Sikkim."
+      parse: {language: en, intent: COMPARISON, locations: [loc:mangan_district, loc:namchi_district], variables: [PRECIPITATION]}
+      expect: {intent: COMPARISON, locations: [loc:mangan_district, loc:namchi_district], context_used: []}
+    - text: "तापक्रम नि?"
+      parse: {language: ne, intent: WEATHER_QUERY, variables: [TEMPERATURE], fragment: true}
+      expect: {intent: COMPARISON, locations: [loc:mangan_district, loc:namchi_district], variables: [TEMPERATURE], context_used: [intent, locations]}
+
+- id: complete_new_question_replaces_everything
+  turns:
+    - text: "What is the temperature in Gangtok?"
+      parse: {language: en, intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE]}
+      expect: {intent: WEATHER_QUERY, context_used: []}
+    - text: "Show the NDVI trend in Namchi district."
+      parse: {language: en, intent: VEGETATION_ANALYSIS, locations: [loc:namchi_district], variables: [NDVI]}
+      expect: {intent: VEGETATION_ANALYSIS, locations: [loc:namchi_district], variables: [NDVI], context_used: []}
+    - text: "और पिछले पांच सालों में?"
+      parse: {language: hi, intent: CLIMATE_TREND, time_period: {type: relative_past, value: 5, unit: year}, fragment: true}
+      expect:
+        intent: VEGETATION_ANALYSIS
+        locations: [loc:namchi_district]
+        variables: [NDVI]
+        time_period: {type: relative_past, value: 5, unit: year}
+        context_used: [intent, locations, variables]
+
+- id: general_question_inherits_nothing
+  turns:
+    - text: "What is the temperature in Gangtok?"
+      parse: {language: en, intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE]}
+      expect: {intent: WEATHER_QUERY, context_used: []}
+    - text: "What are the main causes of landslides?"
+      parse: {language: en, intent: GENERAL_ENVIRONMENT, disasters: [LANDSLIDE]}
+      expect: {intent: GENERAL_ENVIRONMENT, locations: [], variables: [], disasters: [LANDSLIDE], context_used: []}
+
+- id: geography_followup
+  turns:
+    - text: "Where is Pelling?"
+      parse: {language: en, intent: GEOLOCATION_QUERY, locations: [loc:pelling]}
+      expect: {intent: GEOLOCATION_QUERY, locations: [loc:pelling], context_used: []}
+    - text: "What about Lachung?"
+      parse: {language: en, intent: GEOLOCATION_QUERY, locations: [loc:lachung], fragment: true}
+      expect: {intent: GEOLOCATION_QUERY, locations: [loc:lachung], variables: [], context_used: [intent]}
+
+- id: nepali_session
+  turns:
+    - text: "गान्तोकमा तापक्रम कति छ?"
+      parse: {language: ne, intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE]}
+      expect: {intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE], context_used: []}
+    - text: "अनि वर्षा?"
+      parse: {language: ne, intent: WEATHER_QUERY, variables: [PRECIPITATION], fragment: true}
+      expect: {intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [PRECIPITATION], context_used: [intent, locations]}
+    - text: "नाम्चीमा नि?"
+      parse: {language: ne, intent: GEOLOCATION_QUERY, locations: [loc:namchi], fragment: true}
+      expect: {intent: WEATHER_QUERY, locations: [loc:namchi], variables: [PRECIPITATION], context_used: [intent, variables]}
+
+- id: forecast_time_carries_to_a_followup
+  turns:
+    - text: "What will the temperature be in Gangtok tomorrow?"
+      parse: {language: en, intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE], time_period: {type: relative_future, value: 1, unit: day}}
+      expect: {intent: WEATHER_QUERY, context_used: []}
+    - text: "And humidity?"
+      parse: {language: en, intent: WEATHER_QUERY, variables: [HUMIDITY], fragment: true}
+      expect:
+        intent: WEATHER_QUERY
+        locations: [loc:gangtok]
+        variables: [HUMIDITY]
+        time_period: {type: relative_future, value: 1, unit: day}
+        context_used: [intent, locations, time_period]
+
+- id: time_does_not_leak_into_a_complete_question
+  turns:
+    - text: "Show the rainfall trend in Gangtok over the last five years."
+      parse: {language: en, intent: CLIMATE_TREND, locations: [loc:gangtok], variables: [PRECIPITATION], time_period: {type: relative_past, value: 5, unit: year}}
+      expect: {intent: CLIMATE_TREND, context_used: []}
+    - text: "What is the temperature in Gangtok?"
+      parse: {language: en, intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE]}
+      expect: {intent: WEATHER_QUERY, time_period: null, context_used: []}
+    - text: "What about humidity?"
+      parse: {language: en, intent: WEATHER_QUERY, variables: [HUMIDITY], fragment: true}
+      expect: {intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [HUMIDITY], time_period: null, context_used: [intent, locations]}
+
+- id: old_disaster_does_not_linger
+  turns:
+    - text: "What is the flood risk in Rangpo?"
+      parse: {language: en, intent: DISASTER_RISK, locations: [loc:rangpo], disasters: [FLOOD]}
+      expect: {intent: DISASTER_RISK, context_used: []}
+    - text: "What is the temperature in Gangtok?"
+      parse: {language: en, intent: WEATHER_QUERY, locations: [loc:gangtok], variables: [TEMPERATURE]}
+      expect: {intent: WEATHER_QUERY, disasters: [], context_used: []}
+    - text: "What about Namchi?"
+      parse: {language: en, intent: GEOLOCATION_QUERY, locations: [loc:namchi], fragment: true}
+      expect: {intent: WEATHER_QUERY, locations: [loc:namchi], variables: [TEMPERATURE], disasters: [], context_used: [intent, variables]}
+
+- id: fragment_with_no_history
+  note: Nothing to inherit. The validator will ask for clarification later.
+  turns:
+    - text: "What about rainfall?"
+      parse: {language: en, intent: WEATHER_QUERY, variables: [PRECIPITATION], fragment: true}
+      expect: {intent: WEATHER_QUERY, locations: [], variables: [PRECIPITATION], context_used: []}

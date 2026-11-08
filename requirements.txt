@@ -1,6 +1,16 @@
-# Phase 0 dependencies only. Each later phase adds what it needs
-# (torch/transformers in Phase 5, sentence-transformers in Phase 8, fastapi in Phase 13).
+# All dependencies of the NLP subsystem.
 # Versions are pinned to what was installed and tested on Python 3.12.
 pydantic==2.13.5
 PyYAML==6.0.3
 pytest==8.4.2
+scikit-learn==1.9.1
+# Used only as a comparison baseline in scripts/train_language_detector.py.
+langdetect==1.0.9
+transformers==5.18.0
+# PyTorch: install it FIRST, as the README shows (CPU build, then optionally
+# the CUDA build with --force-reinstall). This line then finds it satisfied.
+torch==2.14.1
+fastapi==0.142.2
+uvicorn==0.54.0
+# Needed only by the API tests (FastAPI's test client).
+httpx2==2.13.1

@@ -140,6 +140,8 @@ class Clarification(_Model):
     reason: str
     message_key: str
     missing_fields: list[str] = Field(default_factory=list)
+    # Choices to offer the user, e.g. the two most likely intents.
+    options: list[str] = Field(default_factory=list)
 
 
 class AnalyzeRequest(_Model):
@@ -162,6 +164,16 @@ class AnalyzeResponse(_Model):
     @property
     def needs_clarification(self) -> bool:
         return self.status is Status.NEEDS_CLARIFICATION
+
+    @model_validator(mode="before")
+    @classmethod
+    def _accept_own_json(cls, data):
+        # `needs_clarification` is derived from `status` and appears in the
+        # JSON output. A consumer that parses a response back into this model
+        # must not be rejected for sending it.
+        if isinstance(data, dict) and "needs_clarification" in data:
+            data = {k: v for k, v in data.items() if k != "needs_clarification"}
+        return data
 
     @model_validator(mode="after")
     def _check_status_consistency(self) -> Self:

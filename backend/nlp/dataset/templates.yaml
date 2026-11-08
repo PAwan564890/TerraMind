@@ -1,0 +1,607 @@
+# Template families for the TerraMind query dataset.
+#
+# A FAMILY is one meaning, phrased independently in each language. All rows
+# produced by a family share its id as group_id and always land in the same
+# split, so neither the same sentence frame nor a translation of it can appear
+# in both train and test.
+#
+# Slots ({loc}, {cvar}, ...) are filled by the generator. A trailing digit
+# ({loc2}) means "a second, different value of the same slot".
+#   loc / town / district / river      -> LOCATION
+#   var cvar vvar ndvi gvar elev temp  -> ENV_VARIABLE (different subsets)
+#   dis                                -> DISASTER
+#   now / past / future / range        -> TIME
+#   pct / abs                          -> CHANGE
+#   tdesc / hdesc / desc               -> ENV_VARIABLE (descriptors: "cold", "humid")
+#   sport dish country genre skill product num -> no entity (out of domain)
+#
+# `split: train` pins a family to the training split. It is used for families
+# added to fix a specific, observed failure (Phase 12): they must be learned
+# from, so they cannot be left to land in validation or test by chance.
+#
+# Hindi note: variables are placed only where no word must agree with their
+# gender ("{cvar} का स्तर", never "कितनी {cvar}"), because the slot can be
+# filled with a masculine or a feminine noun.
+#
+# REVIEW STATUS: Hindi and Nepali templates are drafted and NOT yet reviewed by
+# a fluent speaker.
+
+WEATHER_QUERY:
+  - id: weather.current_value
+    operation: LOOKUP
+    en: ["What is the {cvar} in {loc}?", "What's the {cvar} in {loc} {now}?"]
+    hi: ["{loc} में {cvar} का स्तर क्या है?"]
+    ne: ["{loc}मा {cvar} कति छ?"]
+  - id: weather.tell_me
+    operation: LOOKUP
+    en: ["Tell me the {cvar} in {loc} {now}."]
+    hi: ["{now} {loc} में {cvar} की स्थिति बताओ।"]
+    ne: ["{now} {loc}को {cvar} बताउनुहोस्।"]
+  - id: weather.how_is
+    operation: LOOKUP
+    en: ["How is the {cvar} in {loc} {now}?"]
+    hi: ["{loc} में {now} {cvar} का क्या हाल है?"]
+    ne: ["{loc}मा {now} {cvar} कस्तो छ?"]
+  - id: weather.forecast_will_be
+    operation: FORECAST
+    en: ["What will the {cvar} be in {loc} {future}?"]
+    hi: ["{future} {loc} में {cvar} का स्तर क्या रहेगा?"]
+    ne: ["{future} {loc}मा {cvar} कस्तो हुन्छ?"]
+  - id: weather.forecast_give
+    operation: FORECAST
+    en: ["Give me the {cvar} forecast for {loc} for {future}."]
+    hi: ["{loc} के लिए {future} का {cvar} का पूर्वानुमान बताइए।"]
+    ne: ["{loc}को {future}को {cvar}को पूर्वानुमान दिनुहोस्।"]
+  - id: weather.keywords
+    operation: LOOKUP
+    en: ["{cvar} in {loc}", "{loc} {cvar} {now}"]
+    hi: ["{loc} में {cvar}", "{loc} {cvar} {now}"]
+    ne: ["{loc}मा {cvar}", "{loc} {cvar} {now}"]
+  - id: weather.want_to_know
+    operation: LOOKUP
+    en: ["I want to know the {cvar} in {loc}."]
+    hi: ["मुझे {loc} के {cvar} के बारे में जानना है।"]
+    ne: ["मलाई {loc}को {cvar} थाहा पाउनु छ।"]
+  - id: weather.can_you_check
+    operation: LOOKUP
+    en: ["Can you check the {cvar} for {loc}?"]
+    hi: ["क्या आप {loc} के {cvar} की जानकारी दे सकते हैं?"]
+    ne: ["के तपाईं {loc}को {cvar} हेर्न सक्नुहुन्छ?"]
+  - id: weather.two_variables
+    operation: LOOKUP
+    en: ["What are the {cvar} and {cvar2} in {loc} {now}?"]
+    hi: ["{loc} में {now} {cvar} और {cvar2} की स्थिति क्या है?"]
+    ne: ["{loc}मा {now} {cvar} र {cvar2} कस्तो छ?"]
+  - id: weather.followup_fragment
+    operation: LOOKUP
+    en: ["What about {cvar}?", "And the {cvar}?"]
+    hi: ["और {cvar}?", "{cvar} के बारे में क्या?"]
+    ne: ["अनि {cvar}?", "{cvar} नि?"]
+
+  # Added in Phase 12. A follow-up that names only a time was classified as a
+  # general question, because no training example looked like it.
+  - id: weather.followup_time
+    operation: FORECAST
+    split: train
+    en: ["How will it be {future}?", "What about {future}?"]
+    hi: ["{future} कैसा रहेगा?", "और {future}?"]
+    ne: ["{future} कस्तो हुन्छ?", "{future} नि?"]
+  # Added in Phase 12. "How cold is it?" names no variable; "cold" implies one.
+  - id: weather.descriptor_temperature
+    operation: LOOKUP
+    split: train
+    en: ["How {tdesc} is it in {loc} {now}?", "Is it {tdesc} in {loc}?", "How {tdesc} is it out there?"]
+    hi: ["{loc} में {now} कितनी {tdesc} है?", "क्या {loc} में {tdesc} है?", "कितनी {tdesc} है?"]
+    ne: ["{loc}मा {now} कत्तिको {tdesc} छ?", "के {loc}मा {tdesc} छ?", "कत्तिको {tdesc} छ?"]
+
+CLIMATE_TREND:
+  - id: trend.what_is_trend
+    operation: TREND
+    en: ["What is the {cvar} trend in {loc} over the {past}?"]
+    hi: ["{loc} में {past} में {cvar} का क्या रुझान रहा है?"]
+    ne: ["{loc}मा {past}को {cvar}को प्रवृत्ति कस्तो रहेको छ?"]
+  - id: trend.show
+    operation: TREND
+    en: ["Show the {cvar} trend in {loc}."]
+    hi: ["{loc} में {cvar} का रुझान दिखाओ।"]
+    ne: ["{loc}को {cvar}को प्रवृत्ति देखाउनुहोस्।"]
+  - id: trend.how_changed
+    operation: TREND
+    en: ["How has the {cvar} changed in {loc} over the {past}?"]
+    hi: ["{past} में {loc} के {cvar} में क्या बदलाव आया है?"]
+    ne: ["{past}मा {loc}को {cvar}मा कस्तो परिवर्तन आएको छ?"]
+  - id: trend.up_or_down
+    operation: TREND
+    en: ["Has the {cvar} in {loc} been increasing or decreasing?"]
+    hi: ["क्या {loc} में {cvar} का स्तर बढ़ रहा है या घट रहा है?"]
+    ne: ["के {loc}मा {cvar} बढ्दै छ कि घट्दै छ?"]
+  - id: trend.date_range
+    operation: TREND
+    en: ["How did the {cvar} in {loc} change {range}?"]
+    hi: ["{range} {loc} के {cvar} में कैसा बदलाव हुआ?"]
+    ne: ["{range} {loc}को {cvar}मा के परिवर्तन भयो?"]
+  - id: trend.history
+    operation: TREND
+    en: ["Plot the {cvar} history for {loc} for the {past}."]
+    hi: ["{loc} के लिए {past} का {cvar} का इतिहास दिखाइए।"]
+    ne: ["{loc}को {past}को {cvar}को इतिहास देखाउनुहोस्।"]
+  - id: trend.why_changing
+    operation: EXPLAIN
+    en: ["Why has the {cvar} been changing in {loc} over the {past}?"]
+    hi: ["{loc} में {past} में {cvar} का स्तर क्यों बदल रहा है?"]
+    ne: ["{loc}मा {past}मा {cvar} किन परिवर्तन भइरहेको छ?"]
+  - id: trend.long_term
+    operation: TREND
+    en: ["Is there a long-term change in {cvar} in {loc}?"]
+    hi: ["क्या {loc} के {cvar} में कोई दीर्घकालिक बदलाव दिख रहा है?"]
+    ne: ["के {loc}को {cvar}मा दीर्घकालीन परिवर्तन देखिन्छ?"]
+  - id: trend.keywords
+    operation: TREND
+    en: ["{cvar} trend {loc} {past}"]
+    hi: ["{loc} {cvar} का रुझान {past}"]
+    ne: ["{loc} {cvar} प्रवृत्ति {past}"]
+  - id: trend.year_by_year
+    operation: TREND
+    en: ["Give me the year-by-year {cvar} pattern for {loc}."]
+    hi: ["{loc} के {cvar} का साल-दर-साल पैटर्न बताइए।"]
+    ne: ["{loc}को {cvar}को वर्षैपिच्छेको ढाँचा बताउनुहोस्।"]
+
+VEGETATION_ANALYSIS:
+  - id: veg.status
+    operation: LOOKUP
+    en: ["What is the {vvar} status in {loc}?"]
+    hi: ["{loc} में {vvar} की स्थिति क्या है?"]
+    ne: ["{loc}मा {vvar}को अवस्था कस्तो छ?"]
+  - id: veg.why_declining
+    operation: EXPLAIN
+    en: ["Why is {ndvi} declining in {loc}?"]
+    hi: ["{loc} में {ndvi} का स्तर क्यों घट रहा है?"]
+    ne: ["{loc}मा {ndvi} किन घट्दै छ?"]
+  - id: veg.how_changed
+    operation: TREND
+    en: ["How has {ndvi} changed in {loc} over the {past}?"]
+    hi: ["{loc} में {past} में {ndvi} का स्तर कैसे बदला है?"]
+    ne: ["{past}मा {loc}को {ndvi}मा कस्तो परिवर्तन आएको छ?"]
+  - id: veg.map
+    operation: LOOKUP
+    en: ["Show me the {vvar} map of {loc}."]
+    hi: ["{loc} का {vvar} का नक्शा दिखाओ।"]
+    ne: ["{loc}को {vvar}को नक्सा देखाउनुहोस्।"]
+  - id: veg.is_increasing
+    operation: TREND
+    en: ["Is {ndvi} increasing in {loc}?"]
+    hi: ["क्या {loc} में {ndvi} का स्तर बढ़ रहा है?"]
+    ne: ["के {loc}मा {ndvi} बढ्दै छ?"]
+  - id: veg.health
+    operation: LOOKUP
+    en: ["How healthy is the {ndvi} in {loc}?"]
+    hi: ["{loc} में {ndvi} की सेहत कैसी है?"]
+    ne: ["{loc}मा {ndvi}को स्वास्थ्य कस्तो छ?"]
+  - id: veg.changed_in_range
+    operation: TREND
+    en: ["Has the {vvar} of {loc} changed {range}?"]
+    hi: ["क्या {range} {loc} के {vvar} में बदलाव हुआ है?"]
+    ne: ["के {range} {loc}को {vvar}मा परिवर्तन भएको छ?"]
+  - id: veg.cause_of_loss
+    operation: EXPLAIN
+    en: ["What is causing the loss of {ndvi} in {loc}?"]
+    hi: ["{loc} में {ndvi} के नुकसान की वजह क्या है?"]
+    ne: ["{loc}मा {ndvi} घट्नुको कारण के हो?"]
+  - id: veg.report
+    operation: LOOKUP
+    en: ["Give me a {vvar} report for {loc}."]
+    hi: ["{loc} की {vvar} रिपोर्ट दीजिए।"]
+    ne: ["{loc}को {vvar} प्रतिवेदन दिनुहोस्।"]
+  - id: veg.keywords
+    operation: TREND
+    en: ["{ndvi} trend in {loc}"]
+    hi: ["{loc} में {ndvi} का रुझान"]
+    ne: ["{loc}मा {ndvi}को प्रवृत्ति"]
+
+DISASTER_RISK:
+  - id: risk.which_areas
+    operation: RANK
+    en: ["Which areas have high {dis} risk?"]
+    hi: ["किन इलाकों में {dis} का खतरा ज़्यादा है?"]
+    ne: ["कुन क्षेत्रमा {dis}को जोखिम उच्च छ?"]
+  - id: risk.what_is_risk
+    operation: LOOKUP
+    en: ["What is the {dis} risk in {loc}?"]
+    hi: ["{loc} में {dis} का खतरा कितना है?"]
+    ne: ["{loc}मा {dis}को जोखिम कति छ?"]
+  - id: risk.is_at_risk
+    operation: LOOKUP
+    en: ["Is {loc} at risk of {dis}?"]
+    hi: ["क्या {loc} में {dis} का जोखिम है?"]
+    ne: ["के {loc} {dis}को जोखिममा छ?"]
+  - id: risk.which_parts
+    operation: RANK
+    en: ["Which parts of {loc} are most prone to {dis}?"]
+    hi: ["{loc} के कौन से हिस्से {dis} के लिहाज़ से सबसे संवेदनशील हैं?"]
+    ne: ["{loc}का कुन भाग {dis}को उच्च जोखिममा छन्?"]
+  - id: risk.past_events
+    operation: LOOKUP
+    en: ["Have there been any {dis} events in {loc} in the {past}?"]
+    hi: ["क्या {past} में {loc} में {dis} की घटनाएं हुई हैं?"]
+    ne: ["के {past}मा {loc}मा {dis}का घटना भएका छन्?"]
+  - id: risk.how_dangerous
+    operation: LOOKUP
+    en: ["How dangerous is the {dis} situation in {loc} {now}?"]
+    hi: ["{loc} में {now} {dis} की स्थिति कितनी गंभीर है?"]
+    ne: ["{loc}मा {now} {dis}को अवस्था कति गम्भीर छ?"]
+  - id: risk.hazard_map
+    operation: LOOKUP
+    en: ["Show the {dis} hazard map for {loc}."]
+    hi: ["{loc} का {dis} जोखिम नक्शा दिखाओ।"]
+    ne: ["{loc}को {dis} जोखिम नक्सा देखाउनुहोस्।"]
+  - id: risk.why_vulnerable
+    operation: EXPLAIN
+    en: ["Why is {loc} so vulnerable to {dis}?"]
+    hi: ["{loc} में {dis} का खतरा इतना ज़्यादा क्यों है?"]
+    ne: ["{loc} किन {dis}को उच्च जोखिममा छ?"]
+  - id: risk.keywords
+    operation: LOOKUP
+    en: ["{dis} risk {loc}"]
+    hi: ["{loc} {dis} खतरा"]
+    ne: ["{loc} {dis} जोखिम"]
+  - id: risk.list_towns
+    operation: RANK
+    en: ["List the towns with the highest {dis} risk."]
+    hi: ["सबसे ज़्यादा {dis} के खतरे वाले कस्बों की सूची दो।"]
+    ne: ["सबैभन्दा बढी {dis}को जोखिम भएका सहरहरूको सूची दिनुहोस्।"]
+
+GEOLOCATION_QUERY:
+  - id: geo.where_is
+    operation: LOOKUP
+    en: ["Where is {loc}?"]
+    hi: ["{loc} कहां है?"]
+    ne: ["{loc} कहाँ छ?"]
+  - id: geo.terrain_value
+    operation: LOOKUP
+    en: ["What is the {gvar} of {loc}?"]
+    hi: ["{loc} की {gvar} कितनी है?"]
+    ne: ["{loc}को {gvar} कति छ?"]
+  - id: geo.which_district
+    operation: LOOKUP
+    en: ["Which district is {town} in?"]
+    hi: ["{town} किस जिले में है?"]
+    ne: ["{town} कुन जिल्लामा पर्छ?"]
+  - id: geo.which_river
+    operation: LOOKUP
+    en: ["Which river flows through {loc}?"]
+    hi: ["{loc} से कौन सी नदी बहती है?"]
+    ne: ["{loc} भएर कुन नदी बग्छ?"]
+  - id: geo.river_course
+    operation: LOOKUP
+    en: ["Where does the {river} flow?"]
+    hi: ["{river} कहां से बहती है?"]
+    ne: ["{river} कहाँबाट बग्छ?"]
+  - id: geo.show_on_map
+    operation: LOOKUP
+    en: ["Show {loc} on the map."]
+    hi: ["{loc} को नक्शे पर दिखाओ।"]
+    ne: ["{loc}लाई नक्सामा देखाउनुहोस्।"]
+  - id: geo.distance
+    operation: LOOKUP
+    en: ["How far is {town} from {town2}?"]
+    hi: ["{town} से {town2} कितनी दूर है?"]
+    ne: ["{town}बाट {town2} कति टाढा छ?"]
+  - id: geo.boundaries
+    operation: LOOKUP
+    en: ["What are the boundaries of {district}?"]
+    hi: ["{district} की सीमाएं क्या हैं?"]
+    ne: ["{district}को सिमाना के हो?"]
+  - id: geo.towns_in_district
+    operation: LOOKUP
+    en: ["Which towns are in {district}?"]
+    hi: ["{district} में कौन-कौन से कस्बे हैं?"]
+    ne: ["{district}मा कुन-कुन सहर छन्?"]
+  - id: geo.above_sea_level
+    operation: LOOKUP
+    en: ["What is the {elev} of {loc} above sea level?"]
+    hi: ["{loc} समुद्र तल से कितनी {elev} पर है?"]
+    ne: ["{loc} समुद्र सतहबाट कति {elev}मा छ?"]
+
+COMPARISON:
+  - id: compare.basic
+    operation: COMPARE
+    en: ["Compare {cvar} in {loc} and {loc2}."]
+    hi: ["{loc} और {loc2} के {cvar} की तुलना करो।"]
+    ne: ["{loc} र {loc2}को {cvar} तुलना गर्नुहोस्।"]
+  - id: compare.which_higher
+    operation: COMPARE
+    en: ["Which has higher {cvar}, {loc} or {loc2}?"]
+    hi: ["{loc} और {loc2} में से किसका {cvar} का स्तर ज़्यादा है?"]
+    ne: ["{loc} र {loc2}मध्ये कहाँ {cvar} बढी छ?"]
+  - id: compare.how_compare
+    operation: COMPARE
+    en: ["How does the {cvar} in {loc} compare with {loc2}?"]
+    hi: ["{loc} का {cvar} का स्तर {loc2} की तुलना में कैसा है?"]
+    ne: ["{loc2}को तुलनामा {loc}को {cvar} कस्तो छ?"]
+  - id: compare.disaster_risk
+    operation: COMPARE
+    en: ["Compare {dis} risk between {loc} and {loc2}."]
+    hi: ["{loc} और {loc2} के बीच {dis} के खतरे की तुलना करो।"]
+    ne: ["{loc} र {loc2}बीच {dis}को जोखिम तुलना गर्नुहोस्।"]
+  - id: compare.difference
+    operation: COMPARE
+    en: ["What is the difference in {var} between {loc} and {loc2}?"]
+    hi: ["{loc} और {loc2} के {var} में क्या अंतर है?"]
+    ne: ["{loc} र {loc2}को {var}मा के फरक छ?"]
+  - id: compare.over_time
+    operation: COMPARE
+    en: ["Compare the {cvar} of {loc} and {loc2} over the {past}."]
+    hi: ["{past} में {loc} और {loc2} के {cvar} की तुलना दिखाओ।"]
+    ne: ["{past}को {loc} र {loc2}को {cvar} तुलना देखाउनुहोस्।"]
+  - id: compare.vegetation
+    operation: COMPARE
+    en: ["Is {ndvi} better in {loc} or {loc2}?"]
+    hi: ["{ndvi} की स्थिति {loc} में बेहतर है या {loc2} में?"]
+    ne: ["{ndvi} {loc}मा राम्रो छ कि {loc2}मा?"]
+  - id: compare.keywords
+    operation: COMPARE
+    en: ["{loc} vs {loc2} {cvar}"]
+    hi: ["{loc} बनाम {loc2} {cvar}"]
+    ne: ["{loc} र {loc2} {cvar} तुलना"]
+  - id: compare.side_by_side
+    operation: COMPARE
+    en: ["Show a side-by-side comparison of {cvar} for {loc} and {loc2}."]
+    hi: ["{loc} और {loc2} के {cvar} को साथ-साथ दिखाओ।"]
+    ne: ["{loc} र {loc2}को {cvar} सँगसँगै देखाउनुहोस्।"]
+  - id: compare.more_prone
+    operation: COMPARE
+    en: ["Which is more prone to {dis}, {loc} or {loc2}?"]
+    hi: ["{loc} और {loc2} में से कहां {dis} का खतरा ज़्यादा है?"]
+    ne: ["{loc} र {loc2}मध्ये कुन ठाउँ {dis}को बढी जोखिममा छ?"]
+
+  # Added in Phase 12, with weather.descriptor_temperature.
+  - id: compare.descriptor
+    operation: COMPARE
+    split: train
+    en: ["Which place is more {desc}, {loc} or {loc2}?"]
+    hi: ["{loc} और {loc2} में से कहां ज़्यादा {desc} रहती है?"]
+    ne: ["{loc} र {loc2}मध्ये कहाँ बढी {desc} छ?"]
+
+SCENARIO_ANALYSIS:
+  - id: scenario.increase_basic
+    operation: SCENARIO
+    direction: increase
+    en: ["What happens if {cvar} increases by {pct} in {loc}?"]
+    hi: ["अगर {loc} में {cvar} का स्तर {pct} बढ़ जाए तो क्या होगा?"]
+    ne: ["यदि {loc}मा {cvar} {pct}ले बढ्यो भने के हुन्छ?"]
+  - id: scenario.increase_risk_effect
+    operation: SCENARIO
+    direction: increase
+    en: ["If {cvar} increases by {pct} in {loc}, how much could the {dis} risk change?"]
+    hi: ["{loc} में अगर {cvar} का स्तर {pct} बढ़ जाए तो {dis} का खतरा कितना बदल सकता है?"]
+    ne: ["{loc}मा {cvar} {pct}ले बढे {dis}को जोखिम कति बदलिन सक्छ?"]
+  - id: scenario.decrease_basic
+    operation: SCENARIO
+    direction: decrease
+    en: ["What would happen if {cvar} decreased by {pct} in {loc}?"]
+    hi: ["यदि {loc} में {cvar} का स्तर {pct} घट जाए तो क्या असर होगा?"]
+    ne: ["यदि {loc}मा {cvar} {pct}ले घट्यो भने के असर पर्छ?"]
+  - id: scenario.temperature_rise
+    operation: SCENARIO
+    direction: increase
+    en: ["What if the {temp} rises by {abs} in {loc}?"]
+    hi: ["अगर {loc} का {temp} {abs} बढ़ जाए तो क्या होगा?"]
+    ne: ["{loc}को {temp} {abs}ले बढ्यो भने के हुन्छ?"]
+  - id: scenario.increase_no_location
+    operation: SCENARIO
+    direction: increase
+    en: ["What happens if {cvar} increases by {pct}?"]
+    hi: ["अगर {cvar} का स्तर {pct} बढ़ जाए तो क्या होगा?"]
+    ne: ["{cvar} {pct}ले बढ्यो भने के हुन्छ?"]
+  - id: scenario.simulate_increase
+    operation: SCENARIO
+    direction: increase
+    en: ["Simulate a {pct} increase in {cvar} for {loc}."]
+    hi: ["{loc} के लिए {cvar} में {pct} की बढ़ोतरी का अनुमान लगाओ।"]
+    ne: ["{loc}का लागि {cvar}मा {pct} वृद्धिको अनुकरण गर्नुहोस्।"]
+  - id: scenario.decrease_vegetation_effect
+    operation: SCENARIO
+    direction: decrease
+    en: ["How would {ndvi} be affected if {cvar} drops by {pct} in {loc}?"]
+    hi: ["अगर {loc} में {cvar} का स्तर {pct} कम हो जाए तो {ndvi} पर क्या असर पड़ेगा?"]
+    ne: ["{loc}मा {cvar} {pct}ले घट्यो भने {ndvi}मा के असर पर्छ?"]
+  - id: scenario.suppose_increase
+    operation: SCENARIO
+    direction: increase
+    en: ["Suppose {cvar} goes up by {pct} in {loc}. What changes?"]
+    hi: ["मान लो {loc} में {cvar} का स्तर {pct} बढ़ता है। क्या बदलेगा?"]
+    ne: ["मानौँ {loc}मा {cvar} {pct}ले बढ्छ। के परिवर्तन हुन्छ?"]
+  - id: scenario.would_risk_rise
+    operation: SCENARIO
+    direction: increase
+    en: ["Would {dis} risk rise in {loc} if {cvar} increased by {pct}?"]
+    hi: ["क्या {cvar} का स्तर {pct} बढ़ने पर {loc} में {dis} का खतरा बढ़ेगा?"]
+    ne: ["{cvar} {pct}ले बढ्दा के {loc}मा {dis}को जोखिम बढ्छ?"]
+  - id: scenario.temperature_fall
+    operation: SCENARIO
+    direction: decrease
+    en: ["What if the {temp} falls by {abs} in {loc}?"]
+    hi: ["अगर {loc} का {temp} {abs} गिर जाए तो क्या होगा?"]
+    ne: ["{loc}को {temp} {abs}ले घट्यो भने के हुन्छ?"]
+
+GENERAL_ENVIRONMENT:
+  - id: general.causes_of_disaster
+    operation: EXPLAIN
+    en: ["What are the main causes of {dis}?"]
+    hi: ["{dis} के मुख्य कारण क्या हैं?"]
+    ne: ["{dis}का मुख्य कारण के हुन्?"]
+  - id: general.meaning
+    operation: EXPLAIN
+    en: ["What does {var} mean?"]
+    hi: ["{var} का मतलब क्या है?"]
+    ne: ["{var} भनेको के हो?"]
+  - id: general.how_measured
+    operation: EXPLAIN
+    en: ["How is {var} measured?"]
+    hi: ["{var} को कैसे मापा जाता है?"]
+    ne: ["{var} कसरी नापिन्छ?"]
+  - id: general.prevention
+    operation: EXPLAIN
+    en: ["How can {dis} be prevented?"]
+    hi: ["{dis} से कैसे बचा जा सकता है?"]
+    ne: ["{dis}बाट कसरी बच्न सकिन्छ?"]
+  - id: general.concepts
+    operation: EXPLAIN
+    en:
+      - "What is the difference between weather and climate?"
+      - "What is climate change?"
+      - "What is a digital twin of the environment?"
+    hi:
+      - "मौसम और जलवायु में क्या अंतर है?"
+      - "जलवायु परिवर्तन क्या है?"
+      - "पर्यावरण का डिजिटल ट्विन क्या होता है?"
+    ne:
+      - "मौसम र जलवायुमा के फरक छ?"
+      - "जलवायु परिवर्तन भनेको के हो?"
+      - "वातावरणको डिजिटल ट्विन भनेको के हो?"
+  - id: general.climate_change_effect
+    operation: EXPLAIN
+    en: ["How does climate change affect {var}?"]
+    hi: ["जलवायु परिवर्तन का {var} पर क्या असर पड़ता है?"]
+    ne: ["जलवायु परिवर्तनले {var}मा कस्तो असर गर्छ?"]
+  - id: general.why_common_in_mountains
+    operation: EXPLAIN
+    en: ["Why are {dis} events common in mountain regions?"]
+    hi: ["पहाड़ी इलाकों में {dis} की घटनाएं आम क्यों हैं?"]
+    ne: ["पहाडी क्षेत्रमा {dis} किन धेरै हुन्छ?"]
+  - id: general.importance_for_farmers
+    operation: EXPLAIN
+    en: ["Why is {var} important for farmers?"]
+    hi: ["किसानों के लिए {var} की जानकारी क्यों ज़रूरी है?"]
+    ne: ["किसानका लागि {var} किन महत्त्वपूर्ण छ?"]
+  - id: general.what_to_do
+    operation: EXPLAIN
+    en: ["What should people do during a {dis}?"]
+    hi: ["{dis} के समय लोगों को क्या करना चाहिए?"]
+    ne: ["{dis}को बेला मानिसहरूले के गर्नुपर्छ?"]
+  - id: general.satellite_monitoring
+    operation: EXPLAIN
+    en: ["How are satellites used to monitor {var}?"]
+    hi: ["उपग्रहों से {var} की निगरानी कैसे की जाती है?"]
+    ne: ["भू-उपग्रहबाट {var}को अनुगमन कसरी गरिन्छ?"]
+  # Added after the final-evaluation investigation. Hindi and Nepali general
+  # questions about hazards were being rejected as off-topic. Two causes:
+  # off-topic rows had grown to nearly twice the rows of this class, and the
+  # words for "how" (कैसे, कसरी) appeared in four off-topic families but only
+  # one in-domain family. These families give the classifier in-domain "how"
+  # and advice questions to learn from. Pinned to train for that reason.
+  - id: general.how_to_prepare
+    operation: EXPLAIN
+    split: train
+    en: ["How do I prepare for a {dis}?", "How can I stay safe in a {dis}?"]
+    hi: ["{dis} के लिए तैयारी कैसे करें?", "{dis} में सुरक्षित कैसे रहें?"]
+    ne: ["{dis}को लागि कसरी तयारी गर्ने?", "{dis}मा कसरी सुरक्षित रहने?"]
+  - id: general.how_it_happens
+    operation: EXPLAIN
+    split: train
+    en: ["How does a {dis} happen?", "How do {dis} events start?"]
+    hi: ["{dis} की घटना कैसे होती है?", "{dis} की शुरुआत कैसे होती है?"]
+    ne: ["{dis} कसरी हुन्छ?", "{dis} कसरी सुरु हुन्छ?"]
+  - id: general.how_variable_matters
+    operation: EXPLAIN
+    split: train
+    en: ["How does {var} affect daily life?", "How do I read {var} data?"]
+    hi: ["{var} का रोज़मर्रा की ज़िंदगी पर कैसे असर पड़ता है?", "{var} के आंकड़े कैसे पढ़ें?"]
+    ne: ["{var}ले दैनिक जीवनमा कसरी असर गर्छ?", "{var}को तथ्याङ्क कसरी पढ्ने?"]
+  - id: general.precautions
+    operation: EXPLAIN
+    split: train
+    en: ["What precautions should be taken against {dis}?"]
+    hi: ["{dis} से बचाव के लिए क्या सावधानियां रखनी चाहिए?"]
+    ne: ["{dis}बाट जोगिन के सावधानी अपनाउनुपर्छ?"]
+
+OUT_OF_DOMAIN:
+  - id: ood.sport
+    en: ["Who won yesterday's {sport} match?"]
+    hi: ["कल का {sport} मैच किसने जीता?"]
+    ne: ["हिजोको {sport} खेल कसले जित्यो?"]
+  - id: ood.cooking
+    en: ["How do I cook {dish}?"]
+    hi: ["{dish} कैसे बनाते हैं?"]
+    ne: ["{dish} कसरी पकाउने?"]
+  - id: ood.capital
+    en: ["What is the capital of {country}?"]
+    hi: ["{country} की राजधानी क्या है?"]
+    ne: ["{country}को राजधानी के हो?"]
+  - id: ood.arithmetic
+    en: ["What is {num} plus {num2}?"]
+    hi: ["{num} और {num2} का जोड़ कितना होता है?"]
+    ne: ["{num} र {num2} जोड्दा कति हुन्छ?"]
+  - id: ood.movies
+    en: ["Recommend a good {genre} movie."]
+    hi: ["कोई अच्छी {genre} फिल्म बताओ।"]
+    ne: ["कुनै राम्रो {genre} चलचित्र सिफारिस गर्नुहोस्।"]
+  - id: ood.learning
+    en: ["How can I learn {skill} quickly?"]
+    hi: ["मैं {skill} जल्दी कैसे सीख सकता हूं?"]
+    ne: ["म {skill} छिटो कसरी सिक्न सक्छु?"]
+  - id: ood.price
+    en: ["What is the price of a {product}?"]
+    hi: ["{product} की कीमत कितनी है?"]
+    ne: ["{product}को मूल्य कति छ?"]
+  - id: ood.small_talk
+    en:
+      - "Hello, how are you?"
+      - "Tell me a joke."
+      - "What is your name?"
+      - "Thank you very much."
+      - "Good morning!"
+    hi:
+      - "नमस्ते, आप कैसे हैं?"
+      - "कोई चुटकुला सुनाओ।"
+      - "तुम्हारा नाम क्या है?"
+      - "बहुत धन्यवाद।"
+      - "सुप्रभात!"
+    ne:
+      - "नमस्ते, तपाईंलाई कस्तो छ?"
+      - "एउटा चुटकिला सुनाउनुहोस्।"
+      - "तपाईंको नाम के हो?"
+      - "धेरै धन्यवाद।"
+      - "शुभ प्रभात!"
+  - id: ood.politics
+    en: ["Who is the prime minister of {country}?"]
+    hi: ["{country} के प्रधानमंत्री कौन हैं?"]
+    ne: ["{country}को प्रधानमन्त्री को हुन्?"]
+  # Environmental words used in a non-environmental sense.
+  - id: ood.hard_negatives
+    en:
+      - "I am flooded with emails today."
+      - "She gave me a warm welcome."
+      - "My brother's band is called Rainfall."
+      - "The stock market saw a landslide of selling."
+      - "It was a landslide election victory."
+      - "He has a fiery temper."
+    hi:
+      - "आज मेरे पास ईमेल की बाढ़ आ गई है।"
+      - "चुनाव में उस पार्टी की आंधी चल रही है।"
+      - "उसकी बातों में बहुत गर्मी थी।"
+      - "बाज़ार में ऑफरों की बारिश हो रही है।"
+      - "फिल्म ने कमाई का तूफान ला दिया।"
+    ne:
+      - "आज इमेलको बाढी नै आयो।"
+      - "उसको रिस पहिरोजस्तै खस्यो।"
+      - "बजारमा छुटको वर्षा भइरहेको छ।"
+      - "चुनावमा त्यो दलको आँधी चल्यो।"
+      - "उसको बोलीमा निकै तातोपन थियो।"
+  - id: ood.repair
+    en: ["What should I do if my {product} stops working?"]
+    hi: ["{product} खराब हो जाए तो क्या करें?"]
+    ne: ["{product} बिग्रियो भने के गर्ने?"]
+  # Added in Phase 12. Off-topic requests that name a real place were being
+  # treated as weather questions. Places here keep their LOCATION label: they
+  # are still places, the request is simply not environmental.
+  - id: ood.travel
+    split: train
+    en: ["Book me a taxi from {loc} to {loc2}.", "How do I get from {loc} to {loc2} by bus?"]
+    hi: ["{loc} से {loc2} के लिए टैक्सी बुक कर दो।", "{loc} से {loc2} बस से कैसे जाएं?"]
+    ne: ["{loc}बाट {loc2}सम्म ट्याक्सी बुक गरिदिनुहोस्।", "{loc}बाट {loc2} बसमा कसरी जाने?"]
+  - id: ood.hotel
+    split: train
+    en: ["Find me a cheap hotel in {loc}.", "What are the best places to stay in {loc}?"]
+    hi: ["{loc} में सस्ता होटल ढूंढो।", "{loc} में ठहरने की सबसे अच्छी जगह कौन सी है?"]
+    ne: ["{loc}मा सस्तो होटल खोजिदिनुहोस्।", "{loc}मा बस्ने राम्रो ठाउँ कुन हो?"]

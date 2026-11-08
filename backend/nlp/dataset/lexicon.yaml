@@ -1,0 +1,130 @@
+# Slot values that are not in the ontology: time expressions, change
+# magnitudes, and vocabulary for out-of-domain sentences.
+# REVIEW STATUS: Hindi and Nepali entries are drafted and NOT yet reviewed by a
+# fluent speaker.
+
+# Locations that never appear in train or validation. They test whether NER
+# reads context or has only memorised names.
+heldout_locations:
+  - loc:lachen
+  - loc:ravangla
+  - loc:jorethang
+  - loc:singtam
+  - loc:yuksom
+# Only towns with no same-named district are held out; otherwise the name
+# would still be seen in training through "<name> district".
+
+time:
+  # Plain strings; all normalise to {type: current}.
+  now:
+    en: [today, now, right now, currently]
+    hi: [आज, अभी, इस समय]
+    ne: [आज, अहिले, हाल]
+
+  # [text, value, unit] -> relative_past. English forms follow "the".
+  past:
+    en:
+      - [last five years, 5, year]
+      - [past 10 years, 10, year]
+      - [last decade, 10, year]
+      - [last 3 months, 3, month]
+      - [past two years, 2, year]
+      - [last year, 1, year]
+      - [last month, 1, month]
+      - [last 30 days, 30, day]
+      - [past week, 1, week]
+    hi:
+      - [पिछले पांच सालों, 5, year]
+      - [पिछले 10 वर्षों, 10, year]
+      - [पिछले दशक, 10, year]
+      - [पिछले तीन महीनों, 3, month]
+      - [पिछले दो सालों, 2, year]
+      - [पिछले साल, 1, year]
+      - [पिछले महीने, 1, month]
+      - [पिछले 30 दिनों, 30, day]
+      - [पिछले हफ्ते, 1, week]
+    ne:
+      - [पछिल्ला पाँच वर्ष, 5, year]
+      - [पछिल्ला 10 वर्ष, 10, year]
+      - [पछिल्लो दशक, 10, year]
+      - [पछिल्ला तीन महिना, 3, month]
+      - [पछिल्ला दुई वर्ष, 2, year]
+      - [गत वर्ष, 1, year]
+      - [गत महिना, 1, month]
+      - [पछिल्ला 30 दिन, 30, day]
+      - [गत हप्ता, 1, week]
+
+  # [text, value, unit] -> relative_future. No leading "the", to match the
+  # past forms: the article is never part of a time entity.
+  # Hindi "कल" and "परसों" also mean yesterday / day before; these templates
+  # use future tense, and Phase 7 must read the tense to decide.
+  future:
+    en:
+      - [tomorrow, 1, day]
+      - [next week, 1, week]
+      - [day after tomorrow, 2, day]
+      - [next month, 1, month]
+    hi:
+      - [कल, 1, day]
+      - [अगले हफ्ते, 1, week]
+      - [परसों, 2, day]
+      - [अगले महीने, 1, month]
+    ne:
+      - [भोलि, 1, day]
+      - [अर्को हप्ता, 1, week]
+      - [पर्सि, 2, day]
+      - [अर्को महिना, 1, month]
+
+  # [text, start, end] -> date_range. Years are read as Common Era.
+  range:
+    en:
+      - [from 2015 to 2020, "2015-01-01", "2020-12-31"]
+      - [between 2010 and 2020, "2010-01-01", "2020-12-31"]
+      - [from 2018 to 2023, "2018-01-01", "2023-12-31"]
+    hi:
+      - [2015 से 2020 तक, "2015-01-01", "2020-12-31"]
+      - [2010 से 2020 के बीच, "2010-01-01", "2020-12-31"]
+      - [2018 से 2023 तक, "2018-01-01", "2023-12-31"]
+    ne:
+      - [2015 देखि 2020 सम्म, "2015-01-01", "2020-12-31"]
+      - [२०१० देखि २०२० सम्म, "2010-01-01", "2020-12-31"]
+      - [2018 देखि 2023 सम्म, "2018-01-01", "2023-12-31"]
+
+change:
+  # [text, value] -> percent
+  pct:
+    en: [["20%", 20], [10 percent, 10], ["15%", 15], [30 percent, 30], ["50%", 50], ["5%", 5], [25 percent, 25]]
+    hi: [["20%", 20], [10 प्रतिशत, 10], [15 फीसदी, 15], [30 प्रतिशत, 30], ["50%", 50], ["5%", 5], [25 फीसदी, 25]]
+    ne: [["20%", 20], [१० प्रतिशत, 10], [15 प्रतिशत, 15], [३० प्रतिशत, 30], ["50%", 50], ["5%", 5], [२५ प्रतिशत, 25]]
+  # [text, value] -> absolute (degrees Celsius; used with temperature only)
+  abs:
+    en: [["2°C", 2], [2 degrees, 2], [1.5 degrees Celsius, 1.5], ["3°C", 3], [1 degree, 1]]
+    hi: [["2°C", 2], [2 डिग्री, 2], [1.5 डिग्री सेल्सियस, 1.5], [3 डिग्री, 3], [1 डिग्री, 1]]
+    ne: [["2°C", 2], [२ डिग्री, 2], [1.5 डिग्री सेल्सियस, 1.5], [3 डिग्री, 3], [१ डिग्री, 1]]
+
+# Vocabulary for out-of-domain sentences. These slots produce no entities.
+ood:
+  sport:
+    en: [cricket, football, hockey, tennis, badminton, kabaddi, basketball, volleyball]
+    hi: [क्रिकेट, फुटबॉल, हॉकी, टेनिस, बैडमिंटन, कबड्डी, बास्केटबॉल, वॉलीबॉल]
+    ne: [क्रिकेट, फुटबल, हक्की, टेनिस, ब्याडमिन्टन, कबड्डी, बास्केटबल, भलिबल]
+  dish:
+    en: [biryani, momos, dal, pasta, paneer curry, fried rice, an omelette, kheer]
+    hi: [बिरयानी, मोमो, दाल, पास्ता, पनीर की सब्जी, फ्राइड राइस, ऑमलेट, खीर]
+    ne: [बिरयानी, मःम, दाल, पास्ता, पनिरको तरकारी, फ्राइड राइस, अम्लेट, खीर]
+  country:
+    en: [India, Nepal, Japan, France, Brazil, Australia, Bhutan, Germany]
+    hi: [भारत, नेपाल, जापान, फ्रांस, ब्राज़ील, ऑस्ट्रेलिया, भूटान, जर्मनी]
+    ne: [भारत, नेपाल, जापान, फ्रान्स, ब्राजिल, अस्ट्रेलिया, भुटान, जर्मनी]
+  genre:
+    en: [comedy, action, horror, romantic, thriller, science fiction]
+    hi: [कॉमेडी, एक्शन, डरावनी, रोमांटिक, थ्रिलर, साइंस फिक्शन]
+    ne: [कमेडी, एक्सन, डरलाग्दो, रोमान्टिक, थ्रिलर, विज्ञान कथा]
+  skill:
+    en: [guitar, Python programming, chess, swimming, English grammar, photography, cooking, driving]
+    hi: [गिटार, पाइथन प्रोग्रामिंग, शतरंज, तैराकी, अंग्रेज़ी व्याकरण, फोटोग्राफी, खाना बनाना, गाड़ी चलाना]
+    ne: [गितार, पाइथन प्रोग्रामिङ, चेस, पौडी, अङ्ग्रेजी व्याकरण, फोटोग्राफी, खाना पकाउन, गाडी चलाउन]
+  product:
+    en: [laptop, smartphone, bicycle, washing machine, television, printer, refrigerator, camera]
+    hi: [लैपटॉप, स्मार्टफोन, साइकिल, वॉशिंग मशीन, टीवी, प्रिंटर, फ्रिज, कैमरा]
+    ne: [ल्यापटप, स्मार्टफोन, साइकल, वासिङ मेसिन, टिभी, प्रिन्टर, फ्रिज, क्यामेरा]

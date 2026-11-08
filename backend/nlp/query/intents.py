@@ -64,7 +64,7 @@ INTENT_SPECS: dict[Intent, IntentSpec] = {
     Intent.SCENARIO_ANALYSIS: _spec(
         "Hypothetical change and its effect",
         O.SCENARIO, {O.SCENARIO},
-        {"scenario"},
+        {"scenario"}, {"locations"},
     ),
     Intent.GENERAL_ENVIRONMENT: _spec(
         "In-domain question with no data slot; routes to RAG later",

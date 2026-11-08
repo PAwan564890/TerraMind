@@ -1,0 +1,209 @@
+# Gold test set: hand-written queries with the full expected result.
+#
+# Rules for this file:
+#   - Written by hand, never produced by the template generator.
+#   - Phrased differently from every template in dataset/templates.yaml.
+#   - Never used for training or for choosing thresholds.
+#   - Each item has one expected result shared by its three languages, which
+#     also makes it a cross-language consistency check.
+#
+# Several items deliberately use words that are NOT ontology aliases ("cold",
+# "wetter", "forests", "पानी पर्छ"). A perfect pipeline should still map them;
+# a dictionary-only pipeline will not. That gap is what this set measures.
+#
+# REVIEW STATUS: Hindi and Nepali text is drafted and NOT yet reviewed by a
+# fluent speaker. SIZE: 17 items x 3 languages = 51 queries. The design target
+# is about 450; this is a starter set to be extended, ideally by real users.
+
+- id: gold.cold_now
+  expected:
+    status: ok
+    intent: WEATHER_QUERY
+    operation: LOOKUP
+    locations: [loc:gangtok]
+    variables: [TEMPERATURE]
+    time_period: {type: current}
+  en: "How cold is it in Gangtok these days?"
+  hi: "गंगटोक में आजकल कितनी ठंड है?"
+  ne: "गान्तोकमा आजभोलि कत्तिको जाडो छ?"
+
+- id: gold.rain_tomorrow
+  expected:
+    status: ok
+    intent: WEATHER_QUERY
+    operation: FORECAST
+    locations: [loc:namchi]
+    variables: [PRECIPITATION]
+    time_period: {type: relative_future, value: 1, unit: day}
+  en: "Is it going to rain in Namchi tomorrow?"
+  hi: "कल नामची में बारिश होगी क्या?"
+  ne: "भोलि नाम्चीमा पानी पर्छ?"
+
+- id: gold.wetter_decade
+  expected:
+    status: ok
+    intent: CLIMATE_TREND
+    operation: TREND
+    locations: [loc:mangan]
+    variables: [PRECIPITATION]
+    time_period: {type: relative_past, value: 10, unit: year}
+  en: "Over the past ten years, has Mangan been getting wetter or drier?"
+  hi: "पिछले दस सालों में मंगन की बारिश कम हुई है या ज़्यादा?"
+  ne: "पछिल्ला दस वर्षमा मङ्गनमा वर्षा घटेको छ कि बढेको?"
+
+- id: gold.temperature_range
+  expected:
+    status: ok
+    intent: CLIMATE_TREND
+    operation: TREND
+    locations: [loc:gyalshing_district]
+    variables: [TEMPERATURE]
+    time_period: {type: date_range, start: "2015-01-01", end: "2022-12-31"}
+  en: "West Sikkim temperatures, 2015 through 2022: what changed?"
+  hi: "पश्चिम सिक्किम में 2015 से 2022 तक तापमान कैसे बदला?"
+  ne: "पश्चिम सिक्किममा 2015 देखि 2022 सम्म तापक्रम कसरी बदलियो?"
+
+- id: gold.thinner_forests
+  expected:
+    status: ok
+    intent: VEGETATION_ANALYSIS
+    operation: EXPLAIN
+    locations: [loc:pelling]
+    variables: [NDVI]
+  en: "The forests around Pelling look thinner than before, what is going on?"
+  hi: "पेलिंग के आसपास के जंगल पहले से कम क्यों दिखते हैं?"
+  ne: "पेलिङ वरपरका जङ्गल पहिलेभन्दा किन पातला देखिन्छन्?"
+
+- id: gold.greenery_three_years
+  expected:
+    status: ok
+    intent: VEGETATION_ANALYSIS
+    operation: TREND
+    locations: [loc:namchi_district]
+    variables: [NDVI]
+    time_period: {type: relative_past, value: 3, unit: year}
+  en: "Greenery levels across South Sikkim for the last 3 years"
+  hi: "दक्षिण सिक्किम में पिछले तीन साल की हरियाली का हाल बताओ"
+  ne: "दक्षिण सिक्किममा पछिल्ला तीन वर्षको हरियालीको अवस्था बताउनुहोस्"
+
+- id: gold.landslide_possible
+  expected:
+    status: ok
+    intent: DISASTER_RISK
+    operation: LOOKUP
+    locations: [loc:chungthang]
+    disasters: [LANDSLIDE]
+  en: "Could a landslide hit Chungthang?"
+  hi: "क्या चुंगथांग में भूस्खलन हो सकता है?"
+  ne: "के चुङथाङमा पहिरो जान सक्छ?"
+
+- id: gold.floods_most_likely
+  expected:
+    status: ok
+    intent: DISASTER_RISK
+    operation: RANK
+    locations: [loc:sikkim]
+    disasters: [FLOOD]
+  en: "Where in Sikkim are floods most likely?"
+  hi: "सिक्किम में बाढ़ सबसे ज़्यादा कहां आ सकती है?"
+  ne: "सिक्किममा बाढी सबैभन्दा बढी कहाँ आउन सक्छ?"
+
+- id: gold.altitude
+  expected:
+    status: ok
+    intent: GEOLOCATION_QUERY
+    operation: LOOKUP
+    locations: [loc:lachung]
+    variables: [ELEVATION]
+  en: "What altitude does Lachung sit at?"
+  hi: "लाचुंग कितनी ऊंचाई पर बसा है?"
+  ne: "लाचुङ कति उचाइमा छ?"
+
+- id: gold.river_districts
+  expected:
+    status: ok
+    intent: GEOLOCATION_QUERY
+    operation: LOOKUP
+    locations: [loc:teesta]
+  en: "Which districts does the Teesta river pass through?"
+  hi: "तीस्ता नदी किन-किन जिलों से गुज़रती है?"
+  ne: "टिस्टा नदी कुन-कुन जिल्ला भएर बग्छ?"
+
+- id: gold.more_humid
+  expected:
+    status: ok
+    intent: COMPARISON
+    operation: COMPARE
+    locations: [loc:gangtok, loc:namchi]
+    variables: [HUMIDITY]
+  en: "Gangtok or Namchi, which one is more humid?"
+  hi: "गंगटोक और नामची में से कहां ज़्यादा नमी रहती है?"
+  ne: "गान्तोक र नाम्चीमध्ये कहाँ बढी आर्द्रता हुन्छ?"
+
+- id: gold.landslide_two_districts
+  expected:
+    status: ok
+    intent: COMPARISON
+    operation: COMPARE
+    locations: [loc:mangan_district, loc:gyalshing_district]
+    disasters: [LANDSLIDE]
+  en: "Landslide danger: Mangan district versus Gyalshing district"
+  hi: "मंगन जिला और ग्यालशिंग जिला में भूस्खलन का खतरा कहां ज़्यादा है?"
+  ne: "मङ्गन जिल्ला र ग्याल्सिङ जिल्लामध्ये पहिरोको जोखिम कहाँ बढी छ?"
+
+- id: gold.more_rain_flood
+  expected:
+    status: ok
+    intent: SCENARIO_ANALYSIS
+    operation: SCENARIO
+    locations: [loc:gangtok]
+    variables: [PRECIPITATION]
+    disasters: [FLOOD]
+    scenario: {variable: PRECIPITATION, change: 20, unit: percent, direction: increase}
+    target: FLOOD_RISK
+  en: "If Gangtok got 20% more rain, would flooding get worse?"
+  hi: "गंगटोक में अगर बारिश 20% बढ़ जाए तो बाढ़ का खतरा कितना बदल सकता है?"
+  ne: "गान्तोकमा वर्षा 20% बढ्यो भने बाढीको जोखिम कति बदलिन्छ?"
+
+- id: gold.three_degrees
+  expected:
+    status: ok
+    intent: SCENARIO_ANALYSIS
+    operation: SCENARIO
+    locations: [loc:lachen]
+    variables: [TEMPERATURE]
+    scenario: {variable: TEMPERATURE, change: 3, unit: absolute, direction: increase}
+  en: "Imagine temperatures in Lachen climbing 3 degrees, what then?"
+  hi: "मान लीजिए लाचेन का तापमान 3 डिग्री बढ़ गया, फिर क्या होगा?"
+  ne: "मानौँ लाचेनको तापक्रम 3 डिग्रीले बढ्यो, त्यसपछि के हुन्छ?"
+
+- id: gold.predict_landslides
+  expected:
+    status: ok
+    intent: GENERAL_ENVIRONMENT
+    operation: EXPLAIN
+    disasters: [LANDSLIDE]
+  en: "How do scientists predict landslides?"
+  hi: "वैज्ञानिक भूस्खलन का अनुमान कैसे लगाते हैं?"
+  ne: "वैज्ञानिकहरूले पहिरोको पूर्वानुमान कसरी गर्छन्?"
+
+# Off-topic, but it names a place the gazetteer knows.
+- id: gold.taxi
+  expected:
+    status: out_of_domain
+    intent: OUT_OF_DOMAIN
+  en: "Book me a taxi from Siliguri to Gangtok"
+  hi: "सिलीगुड़ी से गंगटोक के लिए टैक्सी बुक कर दो"
+  ne: "सिलिगुडीबाट गान्तोकसम्म ट्याक्सी बुक गरिदिनुहोस्"
+
+# In domain, but no location and no conversation to inherit one from.
+- id: gold.no_location
+  expected:
+    status: needs_clarification
+    intent: WEATHER_QUERY
+    operation: LOOKUP
+    variables: [TEMPERATURE]
+    missing_fields: [locations]
+  en: "How warm is it?"
+  hi: "तापमान कितना है?"
+  ne: "तापक्रम कति छ?"

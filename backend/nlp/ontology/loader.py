@@ -5,7 +5,6 @@ This phase supports EXACT alias lookup only. Suffix stripping (गान्त�
 of the indexes built here.
 """
 
-import unicodedata
 from functools import lru_cache
 from pathlib import Path
 
@@ -13,6 +12,7 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from backend.core import load_settings
+from backend.nlp.preprocessing import lookup_key
 from backend.nlp.query.enums import Disaster, Language, LocationType, RiskTarget, Variable
 from backend.nlp.query.schema import LocationRef
 
@@ -37,9 +37,24 @@ class Aliases(_Entry):
         return [*self.en, *self.hi, *self.ne]
 
 
+class Descriptors(_Entry):
+    """Words that imply a variable without naming it. Any language may be empty."""
+
+    en: list[str] = Field(default_factory=list)
+    hi: list[str] = Field(default_factory=list)
+    ne: list[str] = Field(default_factory=list)
+
+    def by_language(self) -> dict[Language, list[str]]:
+        return {Language.EN: self.en, Language.HI: self.hi, Language.NE: self.ne}
+
+    def all(self) -> list[str]:
+        return [*self.en, *self.hi, *self.ne]
+
+
 class VariableEntry(_Entry):
     unit: str
     aliases: Aliases
+    descriptors: Descriptors = Descriptors()
 
 
 class DisasterEntry(_Entry):
@@ -55,13 +70,8 @@ class LocationEntry(_Entry):
 
 
 def normalize_alias(text: str) -> str:
-    """Canonical form used as the lookup key.
-
-    NFC makes visually identical Devanagari strings byte-identical (a letter
-    plus a combining mark can be encoded in more than one way). casefold()
-    lowercases Latin text and leaves Devanagari untouched.
-    """
-    return " ".join(unicodedata.normalize("NFC", text).casefold().split())
+    """Canonical form used as the lookup key (see preprocessing.lookup_key)."""
+    return lookup_key(text)
 
 
 def _read_yaml(path: Path) -> dict:
@@ -94,7 +104,8 @@ def _check_keys_match_enum(keys, enum, path: Path) -> None:
 def _build_index(entries: dict[str, _Entry], index: dict[str, str], kind: str) -> None:
     """Add every alias of every entry to `index`, refusing ambiguous aliases."""
     for entry_id, entry in entries.items():
-        for alias in entry.aliases.all():
+        descriptors = getattr(entry, "descriptors", None)
+        for alias in [*entry.aliases.all(), *(descriptors.all() if descriptors else [])]:
             key = normalize_alias(alias)
             owner = index.setdefault(key, entry_id)
             if owner != entry_id:
@@ -126,6 +137,16 @@ class Ontology:
         _build_index(disasters, self._concepts, "concept")
         self._locations: dict[str, str] = {}
         _build_index(locations, self._locations, "location")
+
+    @property
+    def concept_index(self) -> dict[str, str]:
+        """Lookup key -> variable or disaster ID, for every alias."""
+        return self._concepts
+
+    @property
+    def location_index(self) -> dict[str, str]:
+        """Lookup key -> location ID, for every alias."""
+        return self._locations
 
     def lookup_variable(self, text: str) -> Variable | None:
         found = self._concepts.get(normalize_alias(text))

@@ -1,0 +1,387 @@
+# Third evaluation set: real-user-STYLE queries.
+#
+# WHAT IT IS. Queries written to look like what people actually type: typos,
+# no punctuation, keywords only, loanwords, chatty openings, places outside
+# the gazetteer, words that imply a variable without naming it.
+#
+# WHAT IT IS NOT. It is NOT real user data. Every query was written by the
+# same AI assistant that wrote the system. It is a stand-in until real
+# queries are collected; docs/EVALUATION.md describes how to collect them.
+#
+# HOW IT DIFFERS FROM gold.yaml AND gold_v2.yaml. Those two sets are clean,
+# complete, well-punctuated questions, each written once and rendered in all
+# three languages. A third set of that shape would measure the same thing
+# again. Here each language is written on its own terms, the text is messy on
+# purpose, and every item names the phenomenon it tests.
+#
+# RULES. Never generated, never trained on, never used to choose a threshold
+# or a fix. It was written before the final models were trained and before
+# their errors were seen.
+#
+# STATUS: its errors were read once, to write docs/EVALUATION.md. Nothing was
+# changed in response. Any fix made from here on that is informed by those
+# errors turns this into a development set too.
+#
+# `scored: false` marks input the system does not claim to support
+# (romanised text, two questions in one, genuinely ambiguous requests). Those
+# are run and their behaviour is reported, but they do not count for or
+# against the score.
+#
+# REVIEW STATUS: PENDING. Hindi and Nepali text has NOT been reviewed by a
+# fluent speaker. Colloquial spellings here are the author's best attempt.
+# SIZE: 58 queries (20 English, 19 Hindi, 19 Nepali), 54 of them scored.
+
+# ----------------------------------------------------------------- English
+- id: real.en.typo_slang
+  language: en
+  phenomenon: typo
+  text: "whats the temprature in gangtok rn"
+  expected: {status: ok, intent: WEATHER_QUERY, operation: LOOKUP, locations: [loc:gangtok], variables: [TEMPERATURE], time_period: {type: current}}
+
+- id: real.en.keywords
+  language: en
+  phenomenon: keywords_only
+  text: "rainfall last 5 years namchi"
+  expected: {status: ok, intent: CLIMATE_TREND, operation: TREND, locations: [loc:namchi], variables: [PRECIPITATION], time_period: {type: relative_past, value: 5, unit: year}}
+
+- id: real.en.polite_long
+  language: en
+  phenomenon: chatty
+  text: "Hi, could you please tell me how much it rained in Pelling over the past month? Thanks!"
+  expected: {status: ok, intent: WEATHER_QUERY, operation: LOOKUP, locations: [loc:pelling], variables: [PRECIPITATION], time_period: {type: relative_past, value: 1, unit: month}}
+
+- id: real.en.unknown_place
+  language: en
+  phenomenon: unknown_place
+  text: "What is the rainfall in Darjeeling?"
+  expected: {status: needs_clarification, intent: WEATHER_QUERY, operation: LOOKUP, variables: [PRECIPITATION], missing_fields: [locations]}
+
+- id: real.en.implied_variable_compare
+  language: en
+  phenomenon: implied_variable
+  text: "which is rainier gangtok or mangan"
+  expected: {status: ok, intent: COMPARISON, operation: COMPARE, locations: [loc:gangtok, loc:mangan], variables: [PRECIPITATION]}
+
+- id: real.en.scenario_colloquial
+  language: en
+  phenomenon: colloquial
+  text: "what if it rains 50% more in Singtam"
+  expected: {status: ok, intent: SCENARIO_ANALYSIS, operation: SCENARIO, locations: [loc:singtam], variables: [PRECIPITATION], scenario: {variable: PRECIPITATION, change: 50, unit: percent, direction: increase}}
+
+- id: real.en.flood_colloquial
+  language: en
+  phenomenon: colloquial
+  text: "any chance of flooding near Rangpo these days"
+  expected: {status: ok, intent: DISASTER_RISK, operation: LOOKUP, locations: [loc:rangpo], disasters: [FLOOD], time_period: {type: current}}
+
+- id: real.en.ood_permit
+  language: en
+  phenomenon: off_topic_near_domain
+  text: "How much is the permit fee for Nathula pass?"
+  expected: {status: out_of_domain, intent: OUT_OF_DOMAIN}
+
+- id: real.en.ood_poem
+  language: en
+  phenomenon: off_topic_near_domain
+  text: "write me a poem about the rain in Gangtok"
+  expected: {status: out_of_domain, intent: OUT_OF_DOMAIN}
+
+- id: real.en.general_no_punct
+  language: en
+  phenomenon: no_punctuation
+  text: "why do landslides happen more during monsoon"
+  expected: {status: ok, intent: GENERAL_ENVIRONMENT, operation: EXPLAIN, disasters: [LANDSLIDE]}
+
+- id: real.en.vegetation_going_down
+  language: en
+  phenomenon: colloquial
+  text: "is vegetation in Mangan district going down"
+  expected: {status: ok, intent: VEGETATION_ANALYSIS, operation: TREND, locations: [loc:mangan_district], variables: [NDVI], time_period: {type: relative_past, value: 10, unit: year}}
+
+- id: real.en.how_high
+  language: en
+  phenomenon: implied_variable
+  text: "how high up is Yuksom"
+  expected: {status: ok, intent: GEOLOCATION_QUERY, operation: LOOKUP, locations: [loc:yuksom], variables: [ELEVATION]}
+
+- id: real.en.all_caps
+  language: en
+  phenomenon: casing
+  text: "TEMPERATURE IN NAMCHI TOMORROW"
+  expected: {status: ok, intent: WEATHER_QUERY, operation: FORECAST, locations: [loc:namchi], variables: [TEMPERATURE], time_period: {type: relative_future, value: 1, unit: day}}
+
+- id: real.en.misspelled_place
+  language: en
+  phenomenon: typo
+  text: "humidity in Gangtokk today"
+  expected: {status: ok, intent: WEATHER_QUERY, operation: LOOKUP, locations: [loc:gangtok], variables: [HUMIDITY], time_period: {type: current}}
+
+- id: real.en.no_place
+  language: en
+  phenomenon: missing_information
+  text: "will it rain tomorrow"
+  expected: {status: needs_clarification, intent: WEATHER_QUERY, operation: FORECAST, variables: [PRECIPITATION], time_period: {type: relative_future, value: 1, unit: day}, missing_fields: [locations]}
+
+- id: real.en.year_range_keywords
+  language: en
+  phenomenon: keywords_only
+  text: "air quality gangtok district 2019-2022"
+  expected: {status: ok, intent: CLIMATE_TREND, operation: TREND, locations: [loc:gangtok_district], variables: [AIR_QUALITY], time_period: {type: date_range, start: "2019-01-01", end: "2022-12-31"}}
+
+- id: real.en.river
+  language: en
+  phenomenon: colloquial
+  text: "where does the teesta start from"
+  expected: {status: ok, intent: GEOLOCATION_QUERY, operation: LOOKUP, locations: [loc:teesta]}
+
+- id: real.en.two_questions
+  language: en
+  phenomenon: multi_intent
+  scored: false
+  text: "What's the temperature in Gangtok and is there any landslide risk?"
+  expected: {status: needs_clarification, intent: WEATHER_QUERY}
+
+- id: real.en.ambiguous_safety
+  language: en
+  phenomenon: ambiguous
+  scored: false
+  text: "Is it safe to travel to Lachung this week?"
+  expected: {status: needs_clarification, intent: DISASTER_RISK}
+
+- id: real.en.romanised_hindi
+  language: en
+  phenomenon: romanised
+  scored: false
+  text: "gangtok mein barish kab hogi"
+  expected: {status: needs_clarification, intent: WEATHER_QUERY}
+
+# ------------------------------------------------------------------- Hindi
+- id: real.hi.loanword
+  language: hi
+  phenomenon: loanword
+  text: "गंगटोक का टेम्परेचर क्या है अभी"
+  expected: {status: ok, intent: WEATHER_QUERY, operation: LOOKUP, locations: [loc:gangtok], variables: [TEMPERATURE], time_period: {type: current}}
+
+- id: real.hi.forecast_colloquial
+  language: hi
+  phenomenon: colloquial
+  text: "परसों मंगन में बारिश के आसार हैं क्या"
+  expected: {status: ok, intent: WEATHER_QUERY, operation: FORECAST, locations: [loc:mangan], variables: [PRECIPITATION], time_period: {type: relative_future, value: 2, unit: day}}
+
+- id: real.hi.keywords
+  language: hi
+  phenomenon: keywords_only
+  text: "पेलिंग नमी आज"
+  expected: {status: ok, intent: WEATHER_QUERY, operation: LOOKUP, locations: [loc:pelling], variables: [HUMIDITY], time_period: {type: current}}
+
+- id: real.hi.air_implied
+  language: hi
+  phenomenon: implied_variable
+  text: "पिछले 2 साल में गंगटोक जिले में हवा कितनी खराब हुई है"
+  expected: {status: ok, intent: CLIMATE_TREND, operation: TREND, locations: [loc:gangtok_district], variables: [AIR_QUALITY], time_period: {type: relative_past, value: 2, unit: year}}
+
+- id: real.hi.chatty_trend
+  language: hi
+  phenomenon: chatty
+  text: "भाई सिक्किम में गर्मी बढ़ रही है क्या पिछले दस सालों से"
+  expected: {status: ok, intent: CLIMATE_TREND, operation: TREND, locations: [loc:sikkim], variables: [TEMPERATURE], time_period: {type: relative_past, value: 10, unit: year}}
+
+- id: real.hi.plants_why
+  language: hi
+  phenomenon: implied_variable
+  text: "लाचुंग में पेड़-पौधे कम क्यों हो रहे हैं"
+  expected: {status: ok, intent: VEGETATION_ANALYSIS, operation: EXPLAIN, locations: [loc:lachung], variables: [NDVI]}
+
+- id: real.hi.flood_fear
+  language: hi
+  phenomenon: colloquial
+  text: "रंगपो में बाढ़ का डर है क्या"
+  expected: {status: ok, intent: DISASTER_RISK, operation: LOOKUP, locations: [loc:rangpo], disasters: [FLOOD]}
+
+- id: real.hi.landslide_where
+  language: hi
+  phenomenon: no_punctuation
+  text: "सबसे ज्यादा भूस्खलन कहाँ होते हैं सिक्किम में"
+  expected: {status: ok, intent: DISASTER_RISK, operation: RANK, locations: [loc:sikkim], disasters: [LANDSLIDE]}
+
+- id: real.hi.compare_colloquial
+  language: hi
+  phenomenon: colloquial
+  text: "बारिश ज्यादा कहाँ होती है, गंगटोक में या पेलिंग में"
+  expected: {status: ok, intent: COMPARISON, operation: COMPARE, locations: [loc:gangtok, loc:pelling], variables: [PRECIPITATION]}
+
+- id: real.hi.scenario_implied
+  language: hi
+  phenomenon: implied_variable
+  text: "सोचो सिंगताम 2 डिग्री ठंडा हो गया, तब?"
+  expected: {status: ok, intent: SCENARIO_ANALYSIS, operation: SCENARIO, locations: [loc:singtam], variables: [TEMPERATURE], scenario: {variable: TEMPERATURE, change: 2, unit: absolute, direction: decrease}}
+
+- id: real.hi.scenario_half
+  language: hi
+  phenomenon: number_word
+  text: "अगर बारिश आधी हो जाए तो नामची में क्या होगा"
+  expected: {status: ok, intent: SCENARIO_ANALYSIS, operation: SCENARIO, locations: [loc:namchi], variables: [PRECIPITATION], scenario: {variable: PRECIPITATION, change: 50, unit: percent, direction: decrease}}
+
+- id: real.hi.river
+  language: hi
+  phenomenon: colloquial
+  text: "तीस्ता नदी कहाँ से निकलती है"
+  expected: {status: ok, intent: GEOLOCATION_QUERY, operation: LOOKUP, locations: [loc:teesta]}
+
+- id: real.hi.how_high
+  language: hi
+  phenomenon: implied_variable
+  text: "युकसोम समुद्र तल से कितना ऊपर है"
+  expected: {status: ok, intent: GEOLOCATION_QUERY, operation: LOOKUP, locations: [loc:yuksom], variables: [ELEVATION]}
+
+- id: real.hi.glof_paraphrase
+  language: hi
+  phenomenon: paraphrase
+  text: "ग्लेशियर झील फटने से क्या होता है"
+  expected: {status: ok, intent: GENERAL_ENVIRONMENT, operation: EXPLAIN, disasters: [GLOF]}
+
+- id: real.hi.ood_food
+  language: hi
+  phenomenon: off_topic_near_domain
+  text: "गंगटोक में सबसे अच्छा मोमो कहाँ मिलता है"
+  expected: {status: out_of_domain, intent: OUT_OF_DOMAIN}
+
+- id: real.hi.ood_politics
+  language: hi
+  phenomenon: off_topic_near_domain
+  text: "सिक्किम के मुख्यमंत्री कौन हैं"
+  expected: {status: out_of_domain, intent: OUT_OF_DOMAIN}
+
+- id: real.hi.no_place
+  language: hi
+  phenomenon: missing_information
+  text: "बारिश कितनी हुई"
+  expected: {status: needs_clarification, intent: WEATHER_QUERY, operation: LOOKUP, variables: [PRECIPITATION], missing_fields: [locations]}
+
+- id: real.hi.unknown_place
+  language: hi
+  phenomenon: unknown_place
+  text: "दार्जिलिंग में तापमान कितना है"
+  expected: {status: needs_clarification, intent: WEATHER_QUERY, operation: LOOKUP, variables: [TEMPERATURE], missing_fields: [locations]}
+
+- id: real.hi.code_mixed
+  language: hi
+  phenomenon: code_mixed
+  text: "Gangtok में rainfall कितना है?"
+  expected: {status: ok, intent: WEATHER_QUERY, operation: LOOKUP, locations: [loc:gangtok], variables: [PRECIPITATION]}
+
+# ------------------------------------------------------------------ Nepali
+- id: real.ne.chatty
+  language: ne
+  phenomenon: chatty
+  text: "गान्तोकको तापक्रम अहिले कति छ हो"
+  expected: {status: ok, intent: WEATHER_QUERY, operation: LOOKUP, locations: [loc:gangtok], variables: [TEMPERATURE], time_period: {type: current}}
+
+- id: real.ne.forecast_colloquial
+  language: ne
+  phenomenon: colloquial
+  text: "पर्सि मङ्गनमा पानी पर्ला?"
+  expected: {status: ok, intent: WEATHER_QUERY, operation: FORECAST, locations: [loc:mangan], variables: [PRECIPITATION], time_period: {type: relative_future, value: 2, unit: day}}
+
+- id: real.ne.keywords
+  language: ne
+  phenomenon: keywords_only
+  text: "पेलिङ आर्द्रता आज"
+  expected: {status: ok, intent: WEATHER_QUERY, operation: LOOKUP, locations: [loc:pelling], variables: [HUMIDITY], time_period: {type: current}}
+
+- id: real.ne.air_implied
+  language: ne
+  phenomenon: implied_variable
+  text: "पछिल्ला २ वर्षमा गान्तोक जिल्लाको हावा कति बिग्रियो"
+  expected: {status: ok, intent: CLIMATE_TREND, operation: TREND, locations: [loc:gangtok_district], variables: [AIR_QUALITY], time_period: {type: relative_past, value: 2, unit: year}}
+
+- id: real.ne.heat_trend
+  language: ne
+  phenomenon: implied_variable
+  text: "पछिल्ला दस वर्षमा सिक्किममा गर्मी बढ्दै गएको हो र"
+  expected: {status: ok, intent: CLIMATE_TREND, operation: TREND, locations: [loc:sikkim], variables: [TEMPERATURE], time_period: {type: relative_past, value: 10, unit: year}}
+
+- id: real.ne.plants_why
+  language: ne
+  phenomenon: implied_variable
+  text: "लाचुङमा रुखबिरुवा किन घट्दै छन्"
+  expected: {status: ok, intent: VEGETATION_ANALYSIS, operation: EXPLAIN, locations: [loc:lachung], variables: [NDVI]}
+
+- id: real.ne.flood_fear
+  language: ne
+  phenomenon: colloquial
+  text: "रङ्पोमा बाढीको डर छ कि छैन"
+  expected: {status: ok, intent: DISASTER_RISK, operation: LOOKUP, locations: [loc:rangpo], disasters: [FLOOD]}
+
+- id: real.ne.landslide_where
+  language: ne
+  phenomenon: no_punctuation
+  text: "सिक्किममा सबैभन्दा धेरै पहिरो कहाँ जान्छ"
+  expected: {status: ok, intent: DISASTER_RISK, operation: RANK, locations: [loc:sikkim], disasters: [LANDSLIDE]}
+
+- id: real.ne.compare_colloquial
+  language: ne
+  phenomenon: colloquial
+  text: "वर्षा धेरै कहाँ हुन्छ, गान्तोकमा कि पेलिङमा"
+  expected: {status: ok, intent: COMPARISON, operation: COMPARE, locations: [loc:gangtok, loc:pelling], variables: [PRECIPITATION]}
+
+- id: real.ne.scenario_colloquial
+  language: ne
+  phenomenon: colloquial
+  text: "सिङतामको तापक्रम २ डिग्री तल झरेमा के फरक पर्ला"
+  expected: {status: ok, intent: SCENARIO_ANALYSIS, operation: SCENARIO, locations: [loc:singtam], variables: [TEMPERATURE], scenario: {variable: TEMPERATURE, change: 2, unit: absolute, direction: decrease}}
+
+- id: real.ne.scenario_half
+  language: ne
+  phenomenon: number_word
+  text: "वर्षा आधा भयो भने नाम्चीमा के हुन्छ"
+  expected: {status: ok, intent: SCENARIO_ANALYSIS, operation: SCENARIO, locations: [loc:namchi], variables: [PRECIPITATION], scenario: {variable: PRECIPITATION, change: 50, unit: percent, direction: decrease}}
+
+- id: real.ne.river
+  language: ne
+  phenomenon: colloquial
+  text: "टिस्टा नदी कहाँबाट सुरु हुन्छ"
+  expected: {status: ok, intent: GEOLOCATION_QUERY, operation: LOOKUP, locations: [loc:teesta]}
+
+- id: real.ne.how_high
+  language: ne
+  phenomenon: implied_variable
+  text: "युक्सम समुद्र सतहभन्दा कति माथि छ"
+  expected: {status: ok, intent: GEOLOCATION_QUERY, operation: LOOKUP, locations: [loc:yuksom], variables: [ELEVATION]}
+
+- id: real.ne.glof_paraphrase
+  language: ne
+  phenomenon: paraphrase
+  text: "हिमताल फुट्दा के हुन्छ"
+  expected: {status: ok, intent: GENERAL_ENVIRONMENT, operation: EXPLAIN, disasters: [GLOF]}
+
+- id: real.ne.ood_food
+  language: ne
+  phenomenon: off_topic_near_domain
+  text: "गान्तोकमा सबैभन्दा मिठो मःम कहाँ पाइन्छ"
+  expected: {status: out_of_domain, intent: OUT_OF_DOMAIN}
+
+- id: real.ne.ood_politics
+  language: ne
+  phenomenon: off_topic_near_domain
+  text: "सिक्किमको मुख्यमन्त्री को हुनुहुन्छ"
+  expected: {status: out_of_domain, intent: OUT_OF_DOMAIN}
+
+- id: real.ne.no_place
+  language: ne
+  phenomenon: missing_information
+  text: "पानी कति पर्यो"
+  expected: {status: needs_clarification, intent: WEATHER_QUERY, operation: LOOKUP, variables: [PRECIPITATION], missing_fields: [locations]}
+
+- id: real.ne.unknown_place
+  language: ne
+  phenomenon: unknown_place
+  text: "दार्जिलिङमा तापक्रम कति छ"
+  expected: {status: needs_clarification, intent: WEATHER_QUERY, operation: LOOKUP, variables: [TEMPERATURE], missing_fields: [locations]}
+
+- id: real.ne.romanised
+  language: ne
+  phenomenon: romanised
+  scored: false
+  text: "gantok ma pani parcha ki pardaina"
+  expected: {status: needs_clarification, intent: WEATHER_QUERY}
