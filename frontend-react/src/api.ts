@@ -8,6 +8,7 @@ import type {
   Mode,
   SourceMode,
   Explanation,
+  QuestionRoute,
 } from "./contracts";
 export class APIError extends Error {}
 export async function request<T>(
@@ -56,6 +57,18 @@ export async function request<T>(
   }
 }
 export const api = {
+  route: (
+    question: string,
+    session_id: string,
+    language: Language | "auto",
+    context_id: string | null,
+    signal?: AbortSignal,
+  ) =>
+    request<QuestionRoute>(
+      "/assistant/route",
+      { question, session_id, language, context_id },
+      signal,
+    ),
   health: (signal?: AbortSignal) =>
     request<Health>("/health", undefined, signal),
   system: (signal?: AbortSignal) =>

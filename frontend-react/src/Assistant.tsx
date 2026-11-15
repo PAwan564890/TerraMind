@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { api } from "./api";
 import { PageHeading } from "./UI";
-import { AIExplanation, Notice, Results } from "./Results";
+import { AIExplanation, Notice, Results, safeURL } from "./Results";
 import type {
   Health,
   System,
@@ -10,6 +10,7 @@ import type {
   SourceMode,
   Language,
   Explanation,
+  QuestionRoute,
 } from "./contracts";
 import { ArrowUpRight } from "lucide-react";
 export const EXAMPLE =
@@ -36,6 +37,7 @@ export default function Assistant({
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [followup, setFollowup] = useState("What is the mean temperature?"),
+    [route, setRoute] = useState<QuestionRoute | null>(null),
     [answer, setAnswer] = useState<Explanation | null>(null);
   const active = useRef<AbortController | null>(null);
   useEffect(() => () => active.current?.abort(), []);
@@ -46,9 +48,33 @@ export default function Assistant({
     active.current = c;
     setBusy(true);
     setError("");
-    setRun(null);
     setAnswer(null);
+    setRoute(null);
     try {
+      const decision = await api.route(
+        question,
+        session,
+        language,
+        run?.bundle?.context_id ?? null,
+        c.signal,
+      );
+      if (c.signal.aborted) return;
+      setRoute(decision);
+      if (decision.category === "contextual" && run?.bundle?.context_id) {
+        setRun(run);
+        setFollowup(question);
+        const explanation = await api.explain(
+          session,
+          run.bundle.context_id,
+          question,
+          language === "auto" ? run.analysis.language.code : language,
+          c.signal,
+        );
+        if (!c.signal.aborted) setAnswer(explanation);
+        return;
+      }
+      if (decision.category !== "environment") return;
+      setRun(null);
       const analysis = await api.analyze(question, session, mode, c.signal);
       const initial: Run = { question, mode, source, analysis, bundle: null };
       if (!c.signal.aborted) setRun(initial);
@@ -196,6 +222,7 @@ export default function Assistant({
               onClick={() => {
                 reset();
                 setAnswer(null);
+                setRoute(null);
                 setError("");
               }}
             >
@@ -220,116 +247,180 @@ export default function Assistant({
           {error}
         </div>
       )}
-      {run && (
-        <>
+      {route &&
+        route.category !== "environment" &&
+        route.category !== "contextual" && (
           <section className="panel">
             <div className="eyebrow">
-              NLP ANALYSIS ·{" "}
-              {run.mode === "demo" ? "RULE DEMONSTRATION" : "TRAINED INFERENCE"}
+              {route.category === "general_knowledge"
+                ? "GENERAL ENVIRONMENTAL KNOWLEDGE"
+                : route.category === "clarification"
+                  ? "CLARIFICATION REQUEST"
+                  : "UNSUPPORTED QUESTION"}
             </div>
-            <h2>Your question</h2>
-            <p>{run.question}</p>
-            <div className="tags">
-              <span className="badge">
-                Language: {run.analysis.language.code}
-              </span>
-              <span className="badge">Intent: {run.analysis.intent.label}</span>
-              <span className="badge">{run.analysis.status}</span>
-            </div>
-            {run.analysis.clarification && (
-              <Notice>
-                {run.analysis.clarification.message_key} Missing:{" "}
-                {run.analysis.clarification.missing_fields.join(", ")}
-              </Notice>
-            )}
-            {run.analysis.status === "out_of_domain" && (
-              <Notice>
-                This question is outside the environmental NLP domain.
-              </Notice>
-            )}
-            <p>
-              Location:{" "}
-              {run.analysis.structured_query?.locations
-                .map((l) => l.name)
-                .join(", ") || "Unresolved"}{" "}
-              · Period:{" "}
-              {run.analysis.structured_query?.time_period?.start ||
-                run.analysis.structured_query?.time_period?.type ||
-                "Unresolved"}{" "}
-              → {run.analysis.structured_query?.time_period?.end || ""}
-            </p>
-            <div className="tags">
-              {run.analysis.entities.map((e, i) => (
-                <span className="entity" key={i}>
-                  {e.text}{" "}
-                  <small>
-                    {e.type} · {e.normalized || "unresolved"}
-                  </small>
-                </span>
-              ))}
-            </div>
-            {run.analysis.warnings.map((w, i) => (
-              <p className="muted" key={i}>
-                {w}
-              </p>
-            ))}
-            <details>
-              <summary>Structured query · original backend contract</summary>
-              <pre>
-                {JSON.stringify(run.analysis.structured_query, null, 2)}
-              </pre>
-            </details>
-          </section>
-          {run.bundle && (
-            <>
-              <Notice>
-                {run.source === "snapshot"
-                  ? "RECORDED SNAPSHOT — not live data"
-                  : "Live source selected. See retrieval timestamps below."}
-              </Notice>
-              <Results environment={run.bundle.environment} />
-              <AIExplanation value={run.bundle.explanation} />
-              {run.bundle.context_id && (
-                <section className="panel">
-                  <h2>Ask about these results</h2>
+            <p>{route.message}</p>
+            {route.knowledge && (
+              <>
+                <h2>{route.knowledge.title}</h2>
+                <p className="explanation" lang={route.knowledge.language}>
+                  {route.knowledge.text}
+                </p>
+                <details className="provenance">
+                  <summary>Trusted references · general knowledge</summary>
+                  <ul>
+                    {route.knowledge.sources.map((s) => (
+                      <li key={s.url}>
+                        <a
+                          href={safeURL(s.url)}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {s.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                   <p>
-                    Stored period and locations only. New measurements require a
-                    new environmental query.
+                    Curated reference summary. No environmental retrieval, model
+                    inference, or LLM generation was performed for this
+                    explanation.
                   </p>
-                  <form onSubmit={ask}>
-                    <label htmlFor="followup">Contextual follow-up</label>
-                    <input
-                      id="followup"
-                      value={followup}
-                      onChange={(e) => setFollowup(e.target.value)}
-                      maxLength={500}
-                      required
-                      disabled={busy || answer?.status === "no_context"}
-                    />
-                    <button
-                      className="primary"
-                      disabled={
-                        busy ||
-                        answer?.status === "no_context" ||
-                        !followup.trim()
-                      }
-                    >
-                      Ask follow-up
-                    </button>
-                  </form>
-                  {answer && <AIExplanation value={answer} />}
-                  {answer?.status === "no_context" && (
-                    <Notice>
-                      Session expired or replaced. Run the environmental query
-                      again to create fresh context.
-                    </Notice>
-                  )}
-                </section>
+                </details>
+              </>
+            )}
+          </section>
+        )}
+      {run &&
+        (!route ||
+          route.category === "environment" ||
+          route.category === "contextual") && (
+          <>
+            <section className="panel">
+              <div className="eyebrow">
+                NLP ANALYSIS ·{" "}
+                {run.mode === "demo"
+                  ? "RULE DEMONSTRATION"
+                  : "TRAINED INFERENCE"}
+              </div>
+              <h2>Your question</h2>
+              <p>{run.question}</p>
+              <div className="tags">
+                <span className="badge">
+                  Language: {run.analysis.language.code}
+                </span>
+                <span className="badge">
+                  Intent: {run.analysis.intent.label}
+                </span>
+                <span className="badge">{run.analysis.status}</span>
+              </div>
+              {run.analysis.clarification && (
+                <Notice>
+                  {(
+                    {
+                      missing_locations: "Specify a supported town.",
+                      missing_variables:
+                        "Specify temperature, rainfall or precipitation.",
+                      missing_comparison_target:
+                        "Choose two supported towns to compare.",
+                      unknown_location:
+                        "This location could not be resolved safely.",
+                      unclear_request:
+                        "Please clarify the environmental request.",
+                    } as Record<string, string>
+                  )[run.analysis.clarification.message_key] ||
+                    "Please clarify the missing or unsupported fields."}{" "}
+                  Missing:{" "}
+                  {run.analysis.clarification.missing_fields.join(", ")}
+                </Notice>
               )}
-            </>
-          )}
-        </>
-      )}
+              {run.analysis.status === "out_of_domain" && (
+                <Notice>
+                  This question is outside the environmental NLP domain.
+                </Notice>
+              )}
+              <p>
+                Location:{" "}
+                {run.analysis.structured_query?.locations
+                  .map((l) => l.name)
+                  .join(", ") || "Unresolved"}{" "}
+                · Period:{" "}
+                {run.analysis.structured_query?.time_period?.start ||
+                  run.analysis.structured_query?.time_period?.type ||
+                  "Unresolved"}{" "}
+                → {run.analysis.structured_query?.time_period?.end || ""}
+              </p>
+              <div className="tags">
+                {run.analysis.entities.map((e, i) => (
+                  <span className="entity" key={i}>
+                    {e.text}{" "}
+                    <small>
+                      {e.type} · {e.normalized || "unresolved"}
+                    </small>
+                  </span>
+                ))}
+              </div>
+              {run.analysis.warnings.map((w, i) => (
+                <p className="muted" key={i}>
+                  {w}
+                </p>
+              ))}
+              <details>
+                <summary>Structured query · original backend contract</summary>
+                <pre>
+                  {JSON.stringify(run.analysis.structured_query, null, 2)}
+                </pre>
+              </details>
+            </section>
+            {run.bundle && (
+              <>
+                <Notice>
+                  {run.source === "snapshot"
+                    ? "RECORDED SNAPSHOT — not live data"
+                    : "Live source selected. See retrieval timestamps below."}
+                </Notice>
+                <Results environment={run.bundle.environment} />
+                <AIExplanation value={run.bundle.explanation} />
+                {run.bundle.context_id && (
+                  <section className="panel">
+                    <h2>Ask about these results</h2>
+                    <p>
+                      Stored period and locations only. New measurements require
+                      a new environmental query.
+                    </p>
+                    <form onSubmit={ask}>
+                      <label htmlFor="followup">Contextual follow-up</label>
+                      <input
+                        id="followup"
+                        value={followup}
+                        onChange={(e) => setFollowup(e.target.value)}
+                        maxLength={500}
+                        required
+                        disabled={busy || answer?.status === "no_context"}
+                      />
+                      <button
+                        className="primary"
+                        disabled={
+                          busy ||
+                          answer?.status === "no_context" ||
+                          !followup.trim()
+                        }
+                      >
+                        Ask follow-up
+                      </button>
+                    </form>
+                    {answer && <AIExplanation value={answer} />}
+                    {answer?.status === "no_context" && (
+                      <Notice>
+                        Session expired or replaced. Run the environmental query
+                        again to create fresh context.
+                      </Notice>
+                    )}
+                  </section>
+                )}
+              </>
+            )}
+          </>
+        )}
     </>
   );
 }

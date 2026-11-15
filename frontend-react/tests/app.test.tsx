@@ -37,6 +37,11 @@ vi.mock("recharts", () => ({
   Legend: () => null,
 }));
 beforeEach(() => {
+  vi.spyOn(api, "route").mockResolvedValue({
+    category: "environment",
+    message: "Continue trained NLP",
+    knowledge: null,
+  });
   vi.spyOn(api, "health").mockResolvedValue({
     status: "degraded",
     models_loaded: false,
@@ -380,5 +385,114 @@ describe("follow-up and comparison contracts", () => {
     expect(
       screen.getByRole("heading", { name: "Your question" }),
     ).toBeInTheDocument();
+  });
+});
+describe("explicit question routing", () => {
+  const knowledge = {
+    topic: "era5",
+    title: "ERA5 reanalysis",
+    text: "Curated reference description, not town measurements.",
+    language: "en" as const,
+    label: "General environmental knowledge · not measured data",
+    sources: [
+      {
+        name: "Open-Meteo",
+        url: "https://open-meteo.com/en/docs/historical-weather-api",
+      },
+    ],
+  };
+  it("separates reference knowledge without NLP, AI calls or charts", async () => {
+    vi.mocked(api.route).mockResolvedValue({
+      category: "general_knowledge",
+      message: knowledge.label,
+      knowledge,
+    });
+    mount("/assistant");
+    fireEvent.change(screen.getByLabelText("Environmental question"), {
+      target: { value: "What is ERA5 reanalysis?" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: /Analyze environment/ }),
+    );
+    expect(
+      await screen.findByRole("heading", { name: "ERA5 reanalysis" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(knowledge.text)).toBeInTheDocument();
+    expect(api.analyze).not.toHaveBeenCalled();
+    expect(api.session).not.toHaveBeenCalled();
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
+  it.each(["unsupported", "clarification"] as const)(
+    "shows %s without invented model results",
+    async (category) => {
+      vi.mocked(api.route).mockResolvedValue({
+        category,
+        message: "Choose a supported town, measurement and period.",
+        knowledge: null,
+      });
+      mount("/assistant");
+      fireEvent.click(
+        screen.getByRole("button", { name: /Analyze environment/ }),
+      );
+      expect(
+        await screen.findByText(
+          "Choose a supported town, measurement and period.",
+        ),
+      ).toBeInTheDocument();
+      expect(api.analyze).not.toHaveBeenCalled();
+      expect(screen.queryByText("NLP ANALYSIS")).not.toBeInTheDocument();
+    },
+  );
+  it("routes a main-input follow-up to the same server context without new NLP", async () => {
+    vi.spyOn(api, "explain").mockResolvedValue({
+      ...bundle.explanation,
+      status: "unsupported",
+      message: "Comparison requires two complete town results.",
+    });
+    await submit();
+    await screen.findByRole("button", { name: "Ask follow-up" });
+    const session = vi.mocked(api.analyze).mock.calls[0][1];
+    vi.mocked(api.route).mockResolvedValue({
+      category: "contextual",
+      message: "Stored context",
+      knowledge: null,
+    });
+    fireEvent.change(screen.getByLabelText("Environmental question"), {
+      target: { value: "Which town was warmer?" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: /Analyze environment/ }),
+    );
+    await screen.findByText("Comparison requires two complete town results.");
+    expect(api.analyze).toHaveBeenCalledTimes(1);
+    expect(api.explain).toHaveBeenCalledWith(
+      session,
+      bundle.context_id,
+      "Which town was warmer?",
+      "en",
+      expect.any(AbortSignal),
+    );
+    expect(screen.getAllByText(/11.9/).length).toBeGreaterThan(0);
+  });
+  it("retains previous environmental context across general knowledge", async () => {
+    await submit();
+    await screen.findByRole("button", { name: "Ask follow-up" });
+    vi.mocked(api.route).mockResolvedValue({
+      category: "general_knowledge",
+      message: knowledge.label,
+      knowledge,
+    });
+    fireEvent.change(screen.getByLabelText("Environmental question"), {
+      target: { value: "What is ERA5?" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: /Analyze environment/ }),
+    );
+    await screen.findByRole("heading", { name: "ERA5 reanalysis" });
+    expect(
+      screen.queryByRole("heading", { name: "Your question" }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("link", { name: "Climate analytics" }));
+    expect(screen.getAllByText(/11.9/).length).toBeGreaterThan(0);
   });
 });

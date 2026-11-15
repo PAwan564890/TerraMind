@@ -74,7 +74,9 @@ test("proxy exposes actual OpenAPI and trained-model health", async ({
 test("mocked AI presentation preserves facts and keyboard-accessible evidence on mobile", async ({
   page,
 }) => {
-  const { default: explanations } = await import("../explanations.json", {with: {type: "json"}});
+  const { default: explanations } = await import("../explanations.json", {
+    with: { type: "json" },
+  });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.route("**/api/environment/session", async (route) => {
     const response = await route.fetch();
@@ -112,4 +114,32 @@ test("mocked AI presentation preserves facts and keyboard-accessible evidence on
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBeTruthy();
+});
+// Genuine FastAPI curated knowledge/routing; no LLM response interception.
+test("general knowledge and unsupported measurements never create environmental charts", async ({
+  page,
+}) => {
+  await page.goto("/assistant");
+  await page
+    .getByLabel("Environmental question")
+    .fill("What does ERA5 reanalysis mean?");
+  await page.getByRole("button", { name: "Analyze environment" }).click();
+  await expect(
+    page.getByRole("heading", { name: "ERA5 reanalysis", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("GENERAL ENVIRONMENTAL KNOWLEDGE", { exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".chart[role=img]")).toHaveCount(0);
+  await expect(
+    page.getByRole("heading", { name: "Your question" }),
+  ).toHaveCount(0);
+  await page
+    .getByLabel("Environmental question")
+    .fill("Show humidity in Gangtok during January 2025");
+  await page.getByRole("button", { name: "Analyze environment" }).click();
+  await expect(
+    page.getByText("UNSUPPORTED QUESTION", { exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".chart[role=img]")).toHaveCount(0);
 });

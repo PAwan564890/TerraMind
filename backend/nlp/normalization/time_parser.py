@@ -117,9 +117,9 @@ def parse_time(text: str, context: str = "", today: date | None = None,
     # The question can supply both endpoints even when NER emits just a year
     # or a truncated date span. Never let those spans expand an explicit day
     # range into a full year. Invalid explicit dates raise a typed input error.
-    explicit = parse_explicit_period(context) if context else None
+    explicit = parse_explicit_period(context, today) if context else None
     if explicit is None:
-        explicit = parse_explicit_period(text)
+        explicit = parse_explicit_period(text, today)
     if explicit is not None:
         return TimeParse(explicit)
 

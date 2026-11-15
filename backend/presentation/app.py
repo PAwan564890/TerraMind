@@ -19,6 +19,7 @@ from backend.genai.context import ContextStore
 from backend.genai.schema import Explanation, Language
 from backend.genai.service import ExplanationService
 from backend.genai import diagnostics
+from backend.presentation.routing import RouteBody, RouteResponse, route_question
 
 
 class EnvironmentBody(BaseModel):
@@ -63,6 +64,10 @@ def create_app(pipeline=None, demo_enabled: bool | None = None, provider=None,
             diagnostics.failure('internal_error',diagnostics.reference())
             return Explanation(status='unavailable', language=language,
                 message='AI explanation failed; environmental results remain available.')
+
+    @app.post('/assistant/route', response_model=RouteResponse)
+    def assistant_route(body: RouteBody):
+        return route_question(body, contexts)
 
     @app.get('/system')
     def system():

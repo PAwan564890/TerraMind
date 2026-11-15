@@ -154,3 +154,22 @@ export interface Run {
   analysis: Analysis;
   bundle: Bundle | null;
 }
+
+/** Preflight routing is deterministic; it is never a trained-model prediction. */
+export interface QuestionRoute {
+  category:
+    | "environment"
+    | "general_knowledge"
+    | "contextual"
+    | "unsupported"
+    | "clarification";
+  message: string;
+  knowledge: null | {
+    topic: string;
+    title: string;
+    text: string;
+    language: Language;
+    label: string;
+    sources: { name: string; url: string }[];
+  };
+}

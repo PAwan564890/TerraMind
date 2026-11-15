@@ -34,6 +34,10 @@ _NATIVE = {
     'बारिश का सारांश समझाएँ': 'rainfall_total_mm',
     'वर्षाको सारांश बुझाउनुहोस्': 'rainfall_total_mm',
     'वर्षाको कुल योग कति छ': 'rainfall_total_mm',
+    'कुल बारिश कितनी हुई': 'rainfall_total_mm',
+    'कुल वर्षा कति भयो': 'rainfall_total_mm',
+    'औसत तापमान क्या था': 'temperature_mean_c',
+    'औसत तापक्रम कति थियो': 'temperature_mean_c',
     'औसत दैनिक तापमान समझाएँ': 'temperature_mean_c',
     'औसत दैनिक तापक्रम बुझाउनुहोस्': 'temperature_mean_c',
 }
@@ -42,6 +46,11 @@ _COMPARISONS = {
     'compare mean temperatures': 'difference_temperature_mean_c',
     'compare the rainfall totals': 'difference_rainfall_total_mm',
     'compare rainfall totals': 'difference_rainfall_total_mm',
+    'which of the two locations was warmer during the selected period': 'difference_temperature_mean_c',
+    'which location was warmer': 'difference_temperature_mean_c',
+    'which town was warmer': 'difference_temperature_mean_c',
+    'दोनों स्थानों में कौन सा अधिक गर्म था': 'difference_temperature_mean_c',
+    'दुई स्थानमध्ये कुन बढी न्यानो थियो': 'difference_temperature_mean_c',
 }
 _REQUEST = re.compile(
     r'(?:please )?(?:explain|describe|summarize|show|what is|what was|what are|what were) '
@@ -58,6 +67,13 @@ def select_facts(question, facts):
     have no eligible facts and are refused before an LLM call.
     """
     key = ' '.join(unicodedata.normalize('NFC', question).casefold().split()).rstrip(' .?!।')
+    if key in {'summarize the temperature changes during the retrieved week',
+               'summarize temperature during the selected period',
+               'तापमान का सारांश बताएं', 'तापक्रमको सारांश दिनुहोस्'}:
+        return [f for f in facts if f.metric in ('temperature_mean_c','temperature_min_c','temperature_max_c')]
+    if key in {'how much did it rain', 'how much rain fell', 'how much rainfall was recorded',
+               'how much did it rain during the selected period'}:
+        return [f for f in facts if f.metric == 'rainfall_total_mm']
     if key in _ALL:
         return list(facts)
     metric = _NATIVE.get(key) or _COMPARISONS.get(key)

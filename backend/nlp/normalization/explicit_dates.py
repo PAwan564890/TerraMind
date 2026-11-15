@@ -7,6 +7,7 @@ numeric forms are refused rather than interpreted as whole-year requests.
 import re
 from datetime import date
 
+from backend.nlp.normalization.calendar_periods import calendar_records
 from backend.nlp.normalization.numbers import ascii_digits
 from backend.nlp.preprocessing import InvalidQueryError, lookup_key
 from backend.nlp.query.enums import TimeType
@@ -47,7 +48,7 @@ def _calendar(match, day='day'):
         raise ExplicitDateError('Invalid calendar date. Use real dates in YYYY-MM-DD format.') from error
 
 
-def parse_explicit_period(text: str) -> TimePeriod | None:
+def parse_explicit_period(text: str, today: date | None = None) -> TimePeriod | None:
     """One explicit day or ordered range, or None when there is no explicit date.
 
     Raises ExplicitDateError for invalid, reversed, incomplete, ambiguous or
@@ -62,6 +63,10 @@ def parse_explicit_period(text: str) -> TimePeriod | None:
                 continue
             first = _calendar(match, 'first') if 'first' in match.groupdict() else _calendar(match)
             records.append((match.start(), match.end(), first, _calendar(match)))
+    try:
+        records.extend(calendar_records(key, records, today))
+    except ValueError as error:
+        raise ExplicitDateError("Invalid calendar period.") from error
     records.sort()
 
     # Any unconsumed date-like fragment blocks year fallback (including NER
@@ -81,7 +86,7 @@ def parse_explicit_period(text: str) -> TimePeriod | None:
         left, right = records[0][:2]
         shared = _SHARED_DMY.fullmatch(key[left:right]) or _SHARED_MDY.fullmatch(key[left:right])
         if (re.match(rf'\s*(?:{_JOIN}|and)(?=$|\W)', key[right:]) or
-                (not shared and re.search(r'\b(?:from|since|between|to|through|until|till)\s*$', key[:left]))):
+                (not shared and records[0][2] == records[0][3] and re.search(r'\b(?:from|since|between|to|through|until|till)\s*$', key[:left]))):
             raise ExplicitDateError('An explicit range needs both endpoints; supply two complete dates.')
     if len(records) == 2:
         gap = key[records[0][1]:records[1][0]].strip()
