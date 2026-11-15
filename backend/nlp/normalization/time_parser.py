@@ -10,6 +10,7 @@ import re
 from dataclasses import dataclass
 from datetime import date
 
+from backend.nlp.normalization.explicit_dates import parse_explicit_period
 from backend.nlp.normalization.morphology import ATTACHED_ENDINGS
 from backend.nlp.normalization.numbers import NUMBER_PATTERN, ascii_digits, to_number
 from backend.nlp.preprocessing import lookup_key
@@ -106,12 +107,22 @@ def parse_time(text: str, context: str = "", today: date | None = None,
                language: Language | None = None) -> TimeParse | None:
     """Turn a time expression into a TimePeriod, or None if no rule applies.
 
-    `context` is the whole query; it is read only to settle the Hindi
-    yesterday/tomorrow ambiguity. `today` anchors open-ended ranges such as
+    `context` is the whole query; explicit calendar dates in it take precedence
+    over partial entity spans. It also settles the Hindi yesterday/tomorrow
+    ambiguity. `today` anchors open-ended ranges such as
     "since 2015" and defaults to the current date. `language` switches off
     keywords that mean something else in that language; with None, every
     keyword applies.
     """
+    # The question can supply both endpoints even when NER emits just a year
+    # or a truncated date span. Never let those spans expand an explicit day
+    # range into a full year. Invalid explicit dates raise a typed input error.
+    explicit = parse_explicit_period(context) if context else None
+    if explicit is None:
+        explicit = parse_explicit_period(text)
+    if explicit is not None:
+        return TimeParse(explicit)
+
     key = ascii_digits(lookup_key(text))
 
     match = _YEAR_RANGE.search(key)

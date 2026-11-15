@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from backend.nlp.context.state import ResolvedTurn, TurnParse
 from backend.nlp.normalization import ChangeValue, Resolution, parse_change, parse_time
+from backend.nlp.normalization.explicit_dates import parse_explicit_period
 from backend.nlp.ontology import Ontology
 from backend.nlp.query.cues import derive_operation, detect_direction
 from backend.nlp.query.enums import EntityType, Intent, Language, Variable
@@ -59,8 +60,12 @@ def build_turn(
     disasters = _unique([e.resolution.value for e in values(EntityType.DISASTER)])
 
     time_entities = values(EntityType.TIME)
-    time_period: TimePeriod | None = None
-    if time_entities:
+    time_period: TimePeriod | None = parse_explicit_period(text)
+    if time_period is not None:
+        # Full-query explicit dates are more specific than any partial TIME
+        # span; do this before context storage, including when NER misses time.
+        warnings.append("explicit_time_from_text")
+    elif time_entities:
         time_period = time_entities[0].resolution.value
         if len(time_entities) > 1:
             warnings.append("multiple_time_expressions")
