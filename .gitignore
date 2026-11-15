@@ -17,3 +17,17 @@ models/
 .idea/
 Thumbs.db
 .ipynb_checkpoints/
+
+# Local presentation scratch, environments and provider secrets
+work/
+.env.*
+!.env.example
+.venv-*/
+.streamlit/secrets.toml
+
+# Prevent accidentally staging model weights outside the normal models/ tree
+*.safetensors
+pytorch_model*.bin
+*.pt
+*.pth
+*.joblib

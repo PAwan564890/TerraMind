@@ -1,0 +1,14 @@
+# Optional isolated Python 3.12 prototype/test environment.
+# Existing working NLP environments should use requirements-dashboard.txt instead.
+# Install torch==2.5.1 from the CPU index FIRST (see final demo guide).
+pydantic==2.13.4
+PyYAML==6.0.3
+numpy==2.3.5
+scikit-learn==1.8.0
+transformers==4.48.3
+pytest==8.4.2
+fastapi==0.141.1
+uvicorn==0.52.1
+httpx==0.28.1
+python-dateutil==4.0.0
+streamlit==1.41.1
