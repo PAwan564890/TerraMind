@@ -17,6 +17,7 @@ def main():
     parser.add_argument('--require-llm',action='store_true')
     args=parser.parse_args()
     client=APIClient(args.api_url)
+    print('NLP mode:',args.mode,'| Environmental source:',args.source)
     print('Provider configured:',client.system().get('genai',{}).get('configured',False))
     text='Show temperature and rainfall in Gangtok from 2025-01-01 to 2025-01-07.'
     for language in ['en','hi','ne']:
@@ -35,9 +36,20 @@ def main():
             assert explanation['status']=='ok', explanation['message']
             assert explanation['text'] and explanation['sources'] and explanation['claims']
             assert explanation['language']==language
-            followup=client.explain('verify-genai-'+language,result['context_id'],'Explain the mean daily temperature in these stored results.',language)
-            assert followup['status']=='ok',followup['message']
-            print(language,'LIVE LLM grounded explanation and follow-up PASS')
+            for question,metric in [
+                ('Explain the mean daily temperature in these stored results.','temperature_mean_c'),
+                ('Explain the rainfall summary in these stored results.','rainfall_total_mm'),
+            ]:
+                followup=client.explain('verify-genai-'+language,result['context_id'],question,language)
+                print(language,metric,'follow-up status:',followup['status'])
+                assert followup['status']=='ok', f"{metric}: {followup['status']}: {followup['message']}"
+                assert followup['text'] and followup['sources'] and followup['language']==language
+                assert followup['claims'] and all(c['metric']==metric for c in followup['claims'])
+                assert followup['provider'] and followup['model'], 'A deterministic fallback is not live LLM verification.'
+            refused=client.explain('verify-genai-'+language,result['context_id'],
+                'What was the humidity in these stored results?',language)
+            assert refused['status']=='unsupported' and refused['text'] is None
+            print(language,'LIVE LLM grounded temperature/rainfall follow-ups PASS; absent humidity rejected')
     print('HTTP verification finished. Disabled/skipped generation is not a live LLM pass.')
 
 
