@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { Environment, Explanation, Weather } from "./contracts";
+import { formatMetric } from "./format";
 export function Notice({ children }: { children: React.ReactNode }) {
   return (
     <div className="notice" role="status">
@@ -18,33 +19,113 @@ export function Notice({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+/** Recognize the server template conservatively; preserve every paragraph.
+ * Unknown layouts remain verbatim instead of being guessed or truncated.
+ */
+export function explanationParts(value: Explanation) {
+  const parts = value.text?.split("\n\n");
+  if (
+    !parts ||
+    !value.claims.length ||
+    parts.length !== 1 + value.claims.length + value.sources.length
+  )
+    return null;
+  const facts = parts.slice(1, 1 + value.claims.length);
+  if (
+    !facts.every((text, i) => {
+      const c = value.claims[i];
+      return (
+        text.startsWith(
+          `${c.location_names.join(" − ")} · ${c.start} — ${c.end}: `,
+        ) &&
+        text.endsWith(
+          `${c.value} ${c.unit} [${c.coverage}; ${c.source_ids.join(", ")}].`,
+        )
+      );
+    })
+  )
+    return null;
+  const sources = parts.slice(1 + value.claims.length);
+  if (
+    !sources.every((text, i) => {
+      const source = value.sources[i];
+      return (
+        text ===
+        `[${source.id}] ${source.name} · ${source.data_kind} · ${source.source_mode} · ${source.retrieved_at}\n${source.url}\n${source.attribution}`
+      );
+    })
+  )
+    return null;
+  return { notice: parts[0], facts, sources };
+}
 export function AIExplanation({ value }: { value: Explanation }) {
+  const parts = value.status === "ok" ? explanationParts(value) : null;
   return (
     <section className="panel ai">
       <div className="eyebrow">GROUNDED GENERATIVE AI</div>
       <h2>
         Explanation <span className="badge">{value.status}</span>
       </h2>
-      <p>{value.message}</p>
+      {value.status !== "ok" && <p>{value.message}</p>}
       {value.status === "ok" && value.text && (
         <>
-          <p className="explanation" lang={value.language}>
-            {value.text}
-          </p>
-          <small>
-            {value.provider} · {value.model} · Validated backend claims;
-            template-rendered language
-          </small>
-          <ul>
-            {value.sources.map((s) => (
-              <li key={s.id}>
-                <a href={safeURL(s.url)} target="_blank" rel="noreferrer">
-                  {s.name}
-                </a>{" "}
-                · {s.source_mode} · {s.attribution}
-              </li>
-            ))}
-          </ul>
+          <div className="explanation" lang={value.language}>
+            {parts ? (
+              parts.facts.map((text, i) => <p key={i}>{text}</p>)
+            ) : (
+              <p>{value.text}</p>
+            )}
+          </div>
+          {parts && (
+            <p className="muted evidence-hint">
+              Grid estimates, not station observations. Coverage and citation
+              IDs accompany each fact; scientific limitations and full evidence
+              are below.
+            </p>
+          )}
+          <details className="provenance">
+            <summary>Evidence, citations & explanation details</summary>
+            <p>{value.message}</p>
+            <p className="muted">
+              {value.provider} · {value.model} · Validated backend claims;
+              template-rendered language
+            </p>
+            {parts ? (
+              <>
+                <p className="explanation" lang={value.language}>
+                  {parts.notice}
+                </p>
+                {parts.sources.map((text, i) => (
+                  <div className="source-entry" key={value.sources[i].id}>
+                    <p className="explanation">{text}</p>
+                    <a
+                      href={safeURL(value.sources[i].url)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Open original data [{value.sources[i].id}]
+                    </a>
+                  </div>
+                ))}
+              </>
+            ) : (
+              <ul>
+                {value.sources.map((source) => (
+                  <li key={source.id}>
+                    <a
+                      href={safeURL(source.url)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      [{source.id}] {source.name}
+                    </a>{" "}
+                    · {source.data_kind} · {source.source_mode} ·{" "}
+                    {source.retrieved_at} · {source.attribution}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </details>
         </>
       )}
     </section>
@@ -58,10 +139,6 @@ export function safeURL(value: string) {
     return undefined;
   }
 }
-const show = (n: number | null | undefined) =>
-  n == null
-    ? "Unavailable"
-    : n.toLocaleString(undefined, { maximumFractionDigits: 2 });
 export function Metrics({ result: r }: { result: Weather }) {
   return (
     <div className="metrics">
@@ -69,7 +146,7 @@ export function Metrics({ result: r }: { result: Weather }) {
         ["Mean temperature", r.summary.temperature_mean_c, "°C"],
         [
           "Minimum / maximum",
-          `${show(r.summary.temperature_min_c)} / ${show(r.summary.temperature_max_c)}`,
+          `${formatMetric(r.summary.temperature_min_c, "°C")} / ${formatMetric(r.summary.temperature_max_c, "°C")}`,
           "°C",
         ],
         ["Rainfall total", r.summary.rainfall_total_mm, "mm"],
@@ -78,7 +155,9 @@ export function Metrics({ result: r }: { result: Weather }) {
         <div className="metric" key={String(label)}>
           <span>{label}</span>
           <strong>
-            {typeof value === "number" ? show(value) : (value ?? "Unavailable")}{" "}
+            {typeof value === "number"
+              ? formatMetric(value, unit as "°C" | "mm")
+              : (value ?? "Unavailable")}{" "}
             <small>{unit}</small>
           </strong>
         </div>
@@ -143,6 +222,12 @@ export function Results({ environment: e }: { environment: Environment }) {
             {r.timezone} · {r.daily.length} daily records · {r.data_kind}
           </p>
           <Metrics result={r} />
+          {!r.summary.totals_complete && (
+            <Notice>
+              Incomplete coverage: totals are partial. Open source details for
+              valid-day counts.
+            </Notice>
+          )}
           <div className="chart-grid">
             <div>
               <h3>Daily temperature · °C</h3>
@@ -158,8 +243,16 @@ export function Results({ environment: e }: { environment: Environment }) {
                       dataKey="date"
                       tickFormatter={(v) => String(v).slice(5)}
                     />
-                    <YAxis />
-                    <Tooltip />
+                    <YAxis
+                      tickFormatter={(v: number) => formatMetric(v, "°C")}
+                    />
+                    <Tooltip
+                      formatter={(v) =>
+                        typeof v === "number"
+                          ? formatMetric(v, "°C")
+                          : "Unavailable"
+                      }
+                    />
                     <Legend />
                     <Line
                       isAnimationActive={false}
@@ -200,8 +293,16 @@ export function Results({ environment: e }: { environment: Environment }) {
                       dataKey="date"
                       tickFormatter={(v) => String(v).slice(5)}
                     />
-                    <YAxis />
-                    <Tooltip />
+                    <YAxis
+                      tickFormatter={(v: number) => formatMetric(v, "mm")}
+                    />
+                    <Tooltip
+                      formatter={(v) =>
+                        typeof v === "number"
+                          ? formatMetric(v, "mm")
+                          : "Unavailable"
+                      }
+                    />
                     <Legend />
                     <Bar
                       isAnimationActive={false}
@@ -252,7 +353,7 @@ export function Results({ environment: e }: { environment: Environment }) {
                         d.rainfall_mm,
                         d.precipitation_mm,
                       ].map((v, i) => (
-                        <td key={i}>{show(v)}</td>
+                        <td key={i}>{formatMetric(v, i < 3 ? "°C" : "mm")}</td>
                       ))}
                     </tr>
                   ))}

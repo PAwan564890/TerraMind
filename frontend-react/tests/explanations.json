@@ -1,0 +1,335 @@
+{
+  "en": {
+    "status": "ok",
+    "message": "Validated environmental explanation.",
+    "language": "en",
+    "text": "AI selected these validated facts from the stored environmental results. Values are deterministic summaries of available daily data; coverage is shown per fact. Differences use left minus right. These are grid reanalysis/weather-model estimates, not station observations. No forecast, hazard or causal claim is made. Recorded snapshots are not live retrievals.\n\nGangtok · 2025-01-01 — 2025-01-07: Mean daily temperature: 11.23 °C [7/7; s0].\n\nGangtok · 2025-01-01 — 2025-01-07: Minimum temperature: 4.90 °C [7/7; s0].\n\nGangtok · 2025-01-01 — 2025-01-07: Maximum temperature: 20.00 °C [7/7; s0].\n\nGangtok · 2025-01-01 — 2025-01-07: Rainfall sum: 11.90 mm [7/7; s0].\n\nGangtok · 2025-01-01 — 2025-01-07: Total precipitation: 11.90 mm [7/7; s0].\n\n[s0] Open-Meteo / ERA5 reanalysis · reanalysis · snapshot · 2026-11-15T12:27:17.330464+00:00\nhttps://archive-api.open-meteo.com/v1/archive?latitude=27.32574&longitude=88.61216&start_date=2025-01-01&end_date=2025-01-07&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum%2Crain_sum&timezone=Asia%2FKolkata&temperature_unit=celsius&precipitation_unit=mm&models=era5\nWeather data by Open-Meteo.com (CC BY 4.0); historical ERA5: Copernicus Climate Change Service / ECMWF.",
+    "claims": [
+      {
+        "fact_id": "0:temperature_mean_c",
+        "value": "11.23",
+        "unit": "°C",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "temperature_mean_c",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      },
+      {
+        "fact_id": "0:temperature_min_c",
+        "value": "4.90",
+        "unit": "°C",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "temperature_min_c",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      },
+      {
+        "fact_id": "0:temperature_max_c",
+        "value": "20.00",
+        "unit": "°C",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "temperature_max_c",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      },
+      {
+        "fact_id": "0:rainfall_total_mm",
+        "value": "11.90",
+        "unit": "mm",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "rainfall_total_mm",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      },
+      {
+        "fact_id": "0:precipitation_total_mm",
+        "value": "11.90",
+        "unit": "mm",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "precipitation_total_mm",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      }
+    ],
+    "sources": [
+      {
+        "id": "s0",
+        "name": "Open-Meteo / ERA5 reanalysis",
+        "url": "https://archive-api.open-meteo.com/v1/archive?latitude=27.32574&longitude=88.61216&start_date=2025-01-01&end_date=2025-01-07&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum%2Crain_sum&timezone=Asia%2FKolkata&temperature_unit=celsius&precipitation_unit=mm&models=era5",
+        "attribution": "Weather data by Open-Meteo.com (CC BY 4.0); historical ERA5: Copernicus Climate Change Service / ECMWF.",
+        "data_kind": "reanalysis",
+        "retrieved_at": "2026-11-15T12:27:17.330464+00:00",
+        "source_mode": "snapshot"
+      }
+    ],
+    "provider": "mock",
+    "model": "mock"
+  },
+  "hi": {
+    "status": "ok",
+    "message": "Validated environmental explanation.",
+    "language": "hi",
+    "text": "AI ने संग्रहीत पर्यावरणीय परिणामों से ये सत्यापित तथ्य चुने हैं। मान उपलब्ध दैनिक डेटा के गणितीय सारांश हैं; प्रत्येक तथ्य के साथ डेटा की उपलब्धता दी गई है। अंतर बाएँ स्थान से दाएँ स्थान को घटाकर है। ये ग्रिड पुनर्विश्लेषण या मौसम मॉडल के अनुमान हैं, स्टेशन मापन नहीं। भविष्यवाणी, आपदा या कारण का दावा नहीं किया गया है। संग्रहीत स्नैपशॉट लाइव डेटा नहीं हैं।\n\nGangtok · 2025-01-01 — 2025-01-07: औसत दैनिक तापमान: 11.23 °C [7/7; s0].\n\nGangtok · 2025-01-01 — 2025-01-07: न्यूनतम तापमान: 4.90 °C [7/7; s0].\n\nGangtok · 2025-01-01 — 2025-01-07: अधिकतम तापमान: 20.00 °C [7/7; s0].\n\nGangtok · 2025-01-01 — 2025-01-07: वर्षा का योग: 11.90 mm [7/7; s0].\n\nGangtok · 2025-01-01 — 2025-01-07: कुल वर्षण: 11.90 mm [7/7; s0].\n\n[s0] Open-Meteo / ERA5 reanalysis · reanalysis · snapshot · 2026-11-15T12:27:17.330464+00:00\nhttps://archive-api.open-meteo.com/v1/archive?latitude=27.32574&longitude=88.61216&start_date=2025-01-01&end_date=2025-01-07&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum%2Crain_sum&timezone=Asia%2FKolkata&temperature_unit=celsius&precipitation_unit=mm&models=era5\nWeather data by Open-Meteo.com (CC BY 4.0); historical ERA5: Copernicus Climate Change Service / ECMWF.",
+    "claims": [
+      {
+        "fact_id": "0:temperature_mean_c",
+        "value": "11.23",
+        "unit": "°C",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "temperature_mean_c",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      },
+      {
+        "fact_id": "0:temperature_min_c",
+        "value": "4.90",
+        "unit": "°C",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "temperature_min_c",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      },
+      {
+        "fact_id": "0:temperature_max_c",
+        "value": "20.00",
+        "unit": "°C",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "temperature_max_c",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      },
+      {
+        "fact_id": "0:rainfall_total_mm",
+        "value": "11.90",
+        "unit": "mm",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "rainfall_total_mm",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      },
+      {
+        "fact_id": "0:precipitation_total_mm",
+        "value": "11.90",
+        "unit": "mm",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "precipitation_total_mm",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      }
+    ],
+    "sources": [
+      {
+        "id": "s0",
+        "name": "Open-Meteo / ERA5 reanalysis",
+        "url": "https://archive-api.open-meteo.com/v1/archive?latitude=27.32574&longitude=88.61216&start_date=2025-01-01&end_date=2025-01-07&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum%2Crain_sum&timezone=Asia%2FKolkata&temperature_unit=celsius&precipitation_unit=mm&models=era5",
+        "attribution": "Weather data by Open-Meteo.com (CC BY 4.0); historical ERA5: Copernicus Climate Change Service / ECMWF.",
+        "data_kind": "reanalysis",
+        "retrieved_at": "2026-11-15T12:27:17.330464+00:00",
+        "source_mode": "snapshot"
+      }
+    ],
+    "provider": "mock",
+    "model": "mock"
+  },
+  "ne": {
+    "status": "ok",
+    "message": "Validated environmental explanation.",
+    "language": "ne",
+    "text": "AI ले भण्डारित वातावरणीय नतिजाबाट यी प्रमाणित तथ्य छानेको छ। मानहरू उपलब्ध दैनिक तथ्याङ्कका गणितीय सारांश हुन्; हरेक तथ्यसँग उपलब्धता देखाइएको छ। अन्तर बायाँ स्थानबाट दायाँ स्थान घटाएर हो। यी ग्रिड पुनर्विश्लेषण वा मौसम मोडेलका अनुमान हुन्, स्टेशनका मापन होइनन्। भविष्यवाणी, विपद् वा कारणको दाबी गरिएको छैन। भण्डारित स्न्यापसट प्रत्यक्ष डेटा होइनन्।\n\nGangtok · 2025-01-01 — 2025-01-07: औसत दैनिक तापक्रम: 11.23 °C [7/7; s0].\n\nGangtok · 2025-01-01 — 2025-01-07: न्यूनतम तापक्रम: 4.90 °C [7/7; s0].\n\nGangtok · 2025-01-01 — 2025-01-07: अधिकतम तापक्रम: 20.00 °C [7/7; s0].\n\nGangtok · 2025-01-01 — 2025-01-07: वर्षाको योग: 11.90 mm [7/7; s0].\n\nGangtok · 2025-01-01 — 2025-01-07: कुल वर्षण: 11.90 mm [7/7; s0].\n\n[s0] Open-Meteo / ERA5 reanalysis · reanalysis · snapshot · 2026-11-15T12:27:17.330464+00:00\nhttps://archive-api.open-meteo.com/v1/archive?latitude=27.32574&longitude=88.61216&start_date=2025-01-01&end_date=2025-01-07&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum%2Crain_sum&timezone=Asia%2FKolkata&temperature_unit=celsius&precipitation_unit=mm&models=era5\nWeather data by Open-Meteo.com (CC BY 4.0); historical ERA5: Copernicus Climate Change Service / ECMWF.",
+    "claims": [
+      {
+        "fact_id": "0:temperature_mean_c",
+        "value": "11.23",
+        "unit": "°C",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "temperature_mean_c",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      },
+      {
+        "fact_id": "0:temperature_min_c",
+        "value": "4.90",
+        "unit": "°C",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "temperature_min_c",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      },
+      {
+        "fact_id": "0:temperature_max_c",
+        "value": "20.00",
+        "unit": "°C",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "temperature_max_c",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      },
+      {
+        "fact_id": "0:rainfall_total_mm",
+        "value": "11.90",
+        "unit": "mm",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "rainfall_total_mm",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      },
+      {
+        "fact_id": "0:precipitation_total_mm",
+        "value": "11.90",
+        "unit": "mm",
+        "location_ids": [
+          "loc:gangtok"
+        ],
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "source_ids": [
+          "s0"
+        ],
+        "metric": "precipitation_total_mm",
+        "location_names": [
+          "Gangtok"
+        ],
+        "coverage": "7/7"
+      }
+    ],
+    "sources": [
+      {
+        "id": "s0",
+        "name": "Open-Meteo / ERA5 reanalysis",
+        "url": "https://archive-api.open-meteo.com/v1/archive?latitude=27.32574&longitude=88.61216&start_date=2025-01-01&end_date=2025-01-07&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum%2Crain_sum&timezone=Asia%2FKolkata&temperature_unit=celsius&precipitation_unit=mm&models=era5",
+        "attribution": "Weather data by Open-Meteo.com (CC BY 4.0); historical ERA5: Copernicus Climate Change Service / ECMWF.",
+        "data_kind": "reanalysis",
+        "retrieved_at": "2026-11-15T12:27:17.330464+00:00",
+        "source_mode": "snapshot"
+      }
+    ],
+    "provider": "mock",
+    "model": "mock"
+  }
+}

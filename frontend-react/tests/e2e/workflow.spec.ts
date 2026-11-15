@@ -70,3 +70,46 @@ test("proxy exposes actual OpenAPI and trained-model health", async ({
   expect(health.ok()).toBeTruthy();
   expect(typeof (await health.json()).models_loaded).toBe("boolean");
 });
+// Mock ONLY the successful explanation: real provider credentials are unavailable.
+test("mocked AI presentation preserves facts and keyboard-accessible evidence on mobile", async ({
+  page,
+}) => {
+  const { default: explanations } = await import("../explanations.json", {with: {type: "json"}});
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.route("**/api/environment/session", async (route) => {
+    const response = await route.fetch();
+    const body = await response.json();
+    await route.fulfill({
+      response,
+      json: { ...body, explanation: explanations.en },
+    });
+  });
+  await page.goto("/assistant");
+  await expect(
+    page.getByRole("option", { name: "Rule demonstration · not trained" }),
+  ).toBeEnabled();
+  await page.getByLabel("Inference mode").selectOption("demo");
+  await page.getByLabel("Environmental source").selectOption("snapshot");
+  await page.getByRole("button", { name: "Analyze environment" }).click();
+  const summary = page.getByText("Evidence, citations & explanation details", {
+    exact: true,
+  });
+  await expect(summary).toBeVisible();
+  const details = page.locator("details").filter({ has: summary });
+  await expect(details).not.toHaveAttribute("open");
+  const text = explanations.en.text.split("\n\n");
+  for (const fact of text.slice(1, 1 + explanations.en.claims.length))
+    await expect(page.getByText(fact, { exact: true })).toBeVisible();
+  await expect(page.getByText(text[0], { exact: true })).not.toBeVisible();
+  await summary.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.getByText(text[0], { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Open original data [s0]", exact: true }),
+  ).toHaveAttribute("href", explanations.en.sources[0].url);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBeTruthy();
+});

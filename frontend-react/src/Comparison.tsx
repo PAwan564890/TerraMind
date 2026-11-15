@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { api } from "./api";
 import { PageHeading } from "./UI";
-import { Notice, Results } from "./Results";
+import { Notice, Results, Metrics } from "./Results";
 import type {
   Health,
   System,
@@ -164,12 +164,16 @@ export default function Comparison({ system }: { system: System | null }) {
                     <p>
                       {r.start} → {r.end}
                     </p>
-                    <p>
-                      Mean {r.summary.temperature_mean_c ?? "Unavailable"} °C
+                    <p className="muted">
+                      {r.timezone} · {r.summary.days} days · {r.data_kind}
                     </p>
-                    <p>
-                      Rainfall {r.summary.rainfall_total_mm ?? "Unavailable"} mm
-                    </p>
+                    <Metrics result={r} />
+                    {!r.summary.totals_complete && (
+                      <Notice>
+                        Partial totals — incomplete coverage. See source details
+                        below.
+                      </Notice>
+                    )}
                   </div>
                 ))}
               </div>
