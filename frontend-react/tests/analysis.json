@@ -1,0 +1,81 @@
+{
+  "language": {
+    "code": "en",
+    "confidence": 0.0
+  },
+  "intent": {
+    "label": "WEATHER_QUERY",
+    "confidence": 0.0
+  },
+  "entities": [
+    {
+      "text": "temperature",
+      "type": "ENV_VARIABLE",
+      "start": 5,
+      "end": 16,
+      "normalized": "TEMPERATURE",
+      "confidence": 0.0
+    },
+    {
+      "text": "rainfall",
+      "type": "ENV_VARIABLE",
+      "start": 21,
+      "end": 29,
+      "normalized": "PRECIPITATION",
+      "confidence": 0.0
+    },
+    {
+      "text": "Gangtok",
+      "type": "LOCATION",
+      "start": 33,
+      "end": 40,
+      "normalized": "loc:gangtok",
+      "confidence": 0.0
+    },
+    {
+      "text": "2025-01-01 to 2025-01-07",
+      "type": "TIME",
+      "start": 46,
+      "end": 70,
+      "normalized": "date_range:2025-01-01:2025-01-07",
+      "confidence": 0.0
+    }
+  ],
+  "structured_query": {
+    "schema_version": "1.0",
+    "intent": "WEATHER_QUERY",
+    "operation": "LOOKUP",
+    "answer_kind": "observation",
+    "locations": [
+      {
+        "id": "loc:gangtok",
+        "name": "Gangtok",
+        "type": "TOWN",
+        "parent": "loc:gangtok_district"
+      }
+    ],
+    "variables": [
+      "TEMPERATURE",
+      "PRECIPITATION"
+    ],
+    "disasters": [],
+    "time_period": {
+      "type": "date_range",
+      "value": null,
+      "unit": null,
+      "start": "2025-01-01",
+      "end": "2025-01-07"
+    },
+    "scenario": null,
+    "target": null,
+    "context_used": []
+  },
+  "status": "ok",
+  "clarification": null,
+  "warnings": [
+    "DEMO: language, intent and entity spans use rules; confidence is unmeasured (0), not a probability.",
+    "Demo vocabulary is limited; use the documented questions.",
+    "explicit_time_from_text"
+  ],
+  "needs_clarification": false
+}

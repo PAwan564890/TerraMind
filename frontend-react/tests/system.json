@@ -1,0 +1,26 @@
+{
+  "genai": {
+    "configured": false,
+    "provider": "disabled",
+    "generation": "LLM-selected facts; validated multilingual templates",
+    "context_ttl_seconds": 900
+  },
+  "demo_enabled": true,
+  "demo_endpoint": "/demo/analyze",
+  "production_endpoint": "/nlp/analyze",
+  "data_sources": [
+    "live",
+    "snapshot"
+  ],
+  "towns": {
+    "loc:gangtok": "Gangtok",
+    "loc:namchi": "Namchi",
+    "loc:mangan": "Mangan"
+  },
+  "limitations": [
+    "Rule demo is not trained inference; demo confidence is unmeasured.",
+    "Weather data are model/reanalysis grid estimates, not station observations.",
+    "No disaster predictions, causal explanations or validated climate trends.",
+    "Three town points; no district or state averages. One process; no authentication."
+  ]
+}

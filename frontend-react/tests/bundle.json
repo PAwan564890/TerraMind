@@ -1,0 +1,147 @@
+{
+  "environment": {
+    "status": "ok",
+    "message": null,
+    "query": {
+      "schema_version": "1.0",
+      "intent": "WEATHER_QUERY",
+      "operation": "LOOKUP",
+      "answer_kind": "observation",
+      "locations": [
+        {
+          "id": "loc:gangtok",
+          "name": "Gangtok",
+          "type": "TOWN",
+          "parent": "loc:gangtok_district"
+        }
+      ],
+      "variables": [
+        "TEMPERATURE",
+        "PRECIPITATION"
+      ],
+      "disasters": [],
+      "time_period": {
+        "type": "date_range",
+        "value": null,
+        "unit": null,
+        "start": "2025-01-01",
+        "end": "2025-01-07"
+      },
+      "scenario": null,
+      "target": null,
+      "context_used": []
+    },
+    "results": [
+      {
+        "location_id": "loc:gangtok",
+        "location_name": "Gangtok",
+        "requested_latitude": 27.32574,
+        "requested_longitude": 88.61216,
+        "grid_latitude": 27.25,
+        "grid_longitude": 88.5,
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "timezone": "Asia/Kolkata",
+        "data_kind": "reanalysis",
+        "source": "Open-Meteo / ERA5 reanalysis",
+        "source_url": "https://archive-api.open-meteo.com/v1/archive?latitude=27.32574&longitude=88.61216&start_date=2025-01-01&end_date=2025-01-07&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum%2Crain_sum&timezone=Asia%2FKolkata&temperature_unit=celsius&precipitation_unit=mm&models=era5",
+        "attribution": "Weather data by Open-Meteo.com (CC BY 4.0); historical ERA5: Copernicus Climate Change Service / ECMWF.",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "retrieved_at": "2026-11-15T12:27:17.330464Z",
+        "current": null,
+        "daily": [
+          {
+            "date": "2025-01-01",
+            "temperature_mean_c": 8.7,
+            "temperature_min_c": 6.2,
+            "temperature_max_c": 11.7,
+            "precipitation_mm": 2.7,
+            "rainfall_mm": 2.7
+          },
+          {
+            "date": "2025-01-02",
+            "temperature_mean_c": 10.4,
+            "temperature_min_c": 6.4,
+            "temperature_max_c": 15.6,
+            "precipitation_mm": 0.0,
+            "rainfall_mm": 0.0
+          },
+          {
+            "date": "2025-01-03",
+            "temperature_mean_c": 11.9,
+            "temperature_min_c": 6.2,
+            "temperature_max_c": 18.9,
+            "precipitation_mm": 0.0,
+            "rainfall_mm": 0.0
+          },
+          {
+            "date": "2025-01-04",
+            "temperature_mean_c": 12.7,
+            "temperature_min_c": 6.3,
+            "temperature_max_c": 20.0,
+            "precipitation_mm": 0.0,
+            "rainfall_mm": 0.0
+          },
+          {
+            "date": "2025-01-05",
+            "temperature_mean_c": 12.0,
+            "temperature_min_c": 4.9,
+            "temperature_max_c": 18.8,
+            "precipitation_mm": 0.0,
+            "rainfall_mm": 0.0
+          },
+          {
+            "date": "2025-01-06",
+            "temperature_mean_c": 13.0,
+            "temperature_min_c": 10.1,
+            "temperature_max_c": 17.7,
+            "precipitation_mm": 0.0,
+            "rainfall_mm": 0.0
+          },
+          {
+            "date": "2025-01-07",
+            "temperature_mean_c": 9.9,
+            "temperature_min_c": 6.3,
+            "temperature_max_c": 14.4,
+            "precipitation_mm": 9.2,
+            "rainfall_mm": 9.2
+          }
+        ],
+        "summary": {
+          "days": 7,
+          "temperature_mean_c": 11.228571428571428,
+          "temperature_min_c": 4.9,
+          "temperature_max_c": 20.0,
+          "precipitation_total_mm": 11.899999999999999,
+          "rainfall_total_mm": 11.899999999999999,
+          "valid_days": {
+            "temperature_mean_c": 7,
+            "temperature_min_c": 7,
+            "temperature_max_c": 7,
+            "precipitation_mm": 7,
+            "rainfall_mm": 7
+          },
+          "totals_complete": true,
+          "interpretation": "Calculated over available daily values only; incomplete totals are partial. No climate trend significance or prediction is inferred."
+        },
+        "warnings": [
+          "Point grid estimate, not a station observation or district average.",
+          "PRECIPITATION includes rain and snow; historical rainfall is rain_sum; weather-model rainfall is rain_sum + showers_sum.",
+          "RECORDED SNAPSHOT: real previously retrieved reanalysis; no live call was made."
+        ]
+      }
+    ],
+    "errors": []
+  },
+  "context_id": "ZupaQKPOYyg7wuZf6OvGaSYW-z-CxHtjYcwXmv8mH5g",
+  "explanation": {
+    "status": "disabled",
+    "message": "LLM provider is not configured; environmental data and deterministic analytics remain available.",
+    "language": "en",
+    "text": null,
+    "claims": [],
+    "sources": [],
+    "provider": null,
+    "model": null
+  }
+}
