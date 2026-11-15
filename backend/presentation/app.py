@@ -18,6 +18,7 @@ from backend.presentation.demo import DemoAnalyzer
 from backend.genai.context import ContextStore
 from backend.genai.schema import Explanation, Language
 from backend.genai.service import ExplanationService
+from backend.genai import diagnostics
 
 
 class EnvironmentBody(BaseModel):
@@ -59,6 +60,7 @@ def create_app(pipeline=None, demo_enabled: bool | None = None, provider=None,
         try:
             return genai.explain(context, language, question)
         except Exception:  # Optional generation must never hide retrieved data.
+            diagnostics.failure('internal_error',diagnostics.reference())
             return Explanation(status='unavailable', language=language,
                 message='AI explanation failed; environmental results remain available.')
 

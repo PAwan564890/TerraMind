@@ -188,3 +188,15 @@ def test_verifier_still_fails_on_provider_refusal(monkeypatch):
     monkeypatch.setattr('sys.argv',['verify_genai.py','--require-llm'])
     with pytest.raises(AssertionError,match='temperature_mean_c: unavailable:'):
         verify_genai.main()
+
+
+def test_verifier_paces_nine_llm_calls_but_not_unsupported_humidity(monkeypatch):
+    client=VerificationClient();now=[0];delays=[]
+    original=verify_genai.VerificationPacer
+    def sleep(seconds):delays.append(seconds);now[0]+=seconds
+    monkeypatch.setattr(verify_genai,'VerificationPacer',lambda seconds:original(seconds,clock=lambda:now[0],sleep=sleep))
+    monkeypatch.setattr(verify_genai,'APIClient',lambda url:client)
+    monkeypatch.setattr('sys.argv',['verify_genai.py','--require-llm','--min-interval-seconds','10'])
+    verify_genai.main()
+    assert delays==[10]*8
+    assert len(client.questions)==9  # six LLM follow-ups, three local humidity refusals

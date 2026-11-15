@@ -5,6 +5,7 @@ from backend.genai.client import OpenAICompatibleClient, ProviderError
 from backend.genai.facts import compile_facts, render
 from backend.genai.schema import Claim, Explanation, Plan
 from backend.genai.questions import select_facts
+from backend.genai import diagnostics
 
 SYSTEM = '''You describe supplied, server-validated environmental summary facts.
 Task: describe_stored_facts. The server has already matched the question to
@@ -57,6 +58,8 @@ class ExplanationService:
                 'sources':[s.model_dump() for s in sources]})
         except ProviderError as error:
             return result('unavailable',str(error))
+        ref = diagnostics.reference()
+        validation_category = 'structured_output'
         try:
             # Reject duplicate JSON keys rather than accepting last-key-wins ambiguity.
             def unique(pairs):
@@ -67,12 +70,14 @@ class ExplanationService:
                     mapping[k]=v
                 return mapping
             plan = Plan.model_validate(json.loads(raw, object_pairs_hook=unique))
+            validation_category = 'grounding_validation'
             if plan.language != language:
                 raise ValueError('wrong language')
             if not plan.answerable:
                 if plan.claims:
                     raise ValueError('contradictory answer')
-                return result('unavailable','The provider declined a request supported by stored facts; no AI explanation was accepted. Environmental data remain available.')
+                diagnostics.failure('provider_rejection',ref)
+                return result('unavailable',f'The provider declined a request supported by stored facts; no AI explanation was accepted. Environmental data remain available. [code=provider_rejection; ref={ref}]')
             if not plan.claims or len({c.fact_id for c in plan.claims}) != len(plan.claims):
                 raise ValueError('empty or repeated claims')
             allowed = {f.fact_id:f for f in facts}
@@ -84,7 +89,8 @@ class ExplanationService:
                 selected.append(fact)
         except (ValueError, TypeError, ValidationError):
             # Raw model output is deliberately discarded, never shown or logged.
-            return result('rejected','AI output failed grounding validation and was discarded. Environmental data remain available.')
+            diagnostics.failure(validation_category,ref)
+            return result('rejected',f'AI output failed grounding validation and was discarded. Environmental data remain available. [code={validation_category}; ref={ref}]')
         return result('ok','AI-selected claims validated against server-computed facts; text rendered with fixed language templates.',
             text=render(language, selected, sources), claims=selected, sources=sources,
             provider=self.client.config.provider, model=self.client.config.model)
