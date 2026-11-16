@@ -29,6 +29,7 @@ class Fact(Claim):
     metric: str
     location_names: list[str]
     coverage: str
+    event_dates: list[StrictStr] = Field(default_factory=list,max_length=1)
 
 
 class Source(StrictModel):

@@ -13,6 +13,7 @@ _ALL = {
     'इन परिणामों का सारांश समझाएँ', 'यी नतिजाको सारांश बुझाउनुहोस्',
 }
 _ALIASES = {
+    'warmest day': 'warmest_day', 'coolest day':'coolest_day', 'wettest day':'wettest_day', 'driest day':'driest_day',
     'temperature': 'temperature_mean_c',
     'temperature results': 'temperature_mean_c',
     'these temperature results': 'temperature_mean_c',
@@ -30,6 +31,8 @@ _ALIASES = {
     'total precipitation': 'precipitation_total_mm',
 }
 _NATIVE = {
+    'सबसे गर्म दिन कौन सा था':'warmest_day', 'सबसे अधिक बारिश कब हुई':'wettest_day',
+    'सबैभन्दा न्यानो दिन कुन थियो':'warmest_day', 'सबैभन्दा बढी वर्षा कहिले भयो':'wettest_day',
     'वर्षा का सारांश समझाएँ': 'rainfall_total_mm',
     'बारिश का सारांश समझाएँ': 'rainfall_total_mm',
     'वर्षाको सारांश बुझाउनुहोस्': 'rainfall_total_mm',
@@ -46,6 +49,8 @@ _COMPARISONS = {
     'compare mean temperatures': 'difference_temperature_mean_c',
     'compare the rainfall totals': 'difference_rainfall_total_mm',
     'compare rainfall totals': 'difference_rainfall_total_mm',
+    'which town received more rainfall':'difference_rainfall_total_mm',
+    'which location received more rainfall':'difference_rainfall_total_mm',
     'which of the two locations was warmer during the selected period': 'difference_temperature_mean_c',
     'which location was warmer': 'difference_temperature_mean_c',
     'which town was warmer': 'difference_temperature_mean_c',
@@ -75,7 +80,7 @@ def select_facts(question, facts):
                'how much did it rain during the selected period'}:
         return [f for f in facts if f.metric == 'rainfall_total_mm']
     if key in _ALL:
-        return list(facts)
+        return [f for f in facts if f.metric not in ('warmest_day','coolest_day','wettest_day','driest_day')]
     metric = _NATIVE.get(key) or _COMPARISONS.get(key)
     if metric is None:
         match = _REQUEST.fullmatch(key)

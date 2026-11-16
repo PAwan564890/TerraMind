@@ -9,6 +9,10 @@ import type {
   SourceMode,
   Explanation,
   QuestionRoute,
+  LocationRegistry,
+  InsightResponse,
+  MeasurementResponse,
+  SelectedBundle,
 } from "./contracts";
 export class APIError extends Error {}
 export async function request<T>(
@@ -57,6 +61,33 @@ export async function request<T>(
   }
 }
 export const api = {
+  locations: (signal?: AbortSignal) =>
+    request<LocationRegistry>("/locations", undefined, signal),
+  insights: (session_id: string, context_id: string, signal?: AbortSignal) =>
+    request<InsightResponse>(
+      "/environment/insights",
+      { session_id, context_id },
+      signal,
+    ),
+  measurements: (query: Query, source_mode: SourceMode, signal?: AbortSignal) =>
+    request<MeasurementResponse>(
+      "/environment/measurements",
+      { query, source_mode },
+      signal,
+    ),
+  selected: (
+    location_ids: string[],
+    start: string,
+    end: string,
+    session_id: string,
+    source_mode: SourceMode,
+    signal?: AbortSignal,
+  ) =>
+    request<SelectedBundle>(
+      "/environment/selected",
+      { location_ids, start, end, session_id, source_mode },
+      signal,
+    ),
   route: (
     question: string,
     session_id: string,

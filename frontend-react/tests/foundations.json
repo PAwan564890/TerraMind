@@ -1,0 +1,1041 @@
+{
+  "registry": {
+    "extended_enabled": true,
+    "locations": [
+      {
+        "id": "loc:gangtok",
+        "name": "Gangtok",
+        "latitude": 27.32574,
+        "longitude": 88.61216,
+        "country_code": "IN",
+        "admin1": "Sikkim",
+        "admin2": "Gangtok district",
+        "parent": "loc:gangtok_district",
+        "aliases": {
+          "en": [
+            "Gangtok",
+            "Gantok"
+          ],
+          "hi": [
+            "गंगटोक",
+            "गंगतोक"
+          ],
+          "ne": [
+            "गान्तोक",
+            "गांतोक",
+            "गान्तोग"
+          ]
+        },
+        "geonames_id": 1271631,
+        "feature_code": "PPLA",
+        "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Gangtok&count=10&countryCode=IN",
+        "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+        "verified_at": "2026-11-15T19:54:29.239383+00:00",
+        "legacy": true
+      },
+      {
+        "id": "loc:namchi",
+        "name": "Namchi",
+        "latitude": 27.16494,
+        "longitude": 88.3638,
+        "country_code": "IN",
+        "admin1": "Sikkim",
+        "admin2": "South District",
+        "parent": "loc:namchi_district",
+        "aliases": {
+          "en": [
+            "Namchi"
+          ],
+          "hi": [
+            "नामची"
+          ],
+          "ne": [
+            "नाम्ची"
+          ]
+        },
+        "geonames_id": 1262029,
+        "feature_code": "PPL",
+        "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Namchi&count=10&countryCode=IN",
+        "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+        "verified_at": "2026-11-15T19:54:29.239401+00:00",
+        "legacy": true
+      },
+      {
+        "id": "loc:mangan",
+        "name": "Mangan",
+        "latitude": 27.50965,
+        "longitude": 88.52206,
+        "country_code": "IN",
+        "admin1": "Sikkim",
+        "admin2": "North District",
+        "parent": "loc:mangan_district",
+        "aliases": {
+          "en": [
+            "Mangan"
+          ],
+          "hi": [
+            "मंगन"
+          ],
+          "ne": [
+            "मङ्गन"
+          ]
+        },
+        "geonames_id": 1263776,
+        "feature_code": "PPL",
+        "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Mangan&count=10&countryCode=IN",
+        "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+        "verified_at": "2026-11-15T19:54:29.239407+00:00",
+        "legacy": true
+      },
+      {
+        "id": "loc:gyalshing",
+        "name": "Gyalshing",
+        "latitude": 27.28952,
+        "longitude": 88.25764,
+        "country_code": "IN",
+        "admin1": "Sikkim",
+        "admin2": "West Sikkim",
+        "parent": "loc:gyalshing_district",
+        "aliases": {
+          "en": [
+            "Gyalshing",
+            "Geyzing",
+            "Gyalzing"
+          ],
+          "hi": [
+            "ग्यालशिंग",
+            "गेजिंग"
+          ],
+          "ne": [
+            "ग्याल्सिङ",
+            "गेजिङ"
+          ]
+        },
+        "geonames_id": 1270577,
+        "feature_code": "PPLA2",
+        "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Gyalshing&count=10&countryCode=IN",
+        "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+        "verified_at": "2026-11-15T19:54:29.239410+00:00",
+        "legacy": false
+      },
+      {
+        "id": "loc:rangpo",
+        "name": "Rangpo",
+        "latitude": 27.17733,
+        "longitude": 88.53358,
+        "country_code": "IN",
+        "admin1": "Sikkim",
+        "admin2": "Pakyong",
+        "parent": "loc:pakyong_district",
+        "aliases": {
+          "en": [
+            "Rangpo"
+          ],
+          "hi": [
+            "रंगपो"
+          ],
+          "ne": [
+            "रङ्पो"
+          ]
+        },
+        "geonames_id": 1258484,
+        "feature_code": "PPL",
+        "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Rangpo&count=10&countryCode=IN",
+        "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+        "verified_at": "2026-11-15T19:54:29.239413+00:00",
+        "legacy": false
+      },
+      {
+        "id": "loc:jorethang",
+        "name": "Jorethang",
+        "latitude": 27.10696,
+        "longitude": 88.32332,
+        "country_code": "IN",
+        "admin1": "Sikkim",
+        "admin2": null,
+        "parent": "loc:namchi_district",
+        "aliases": {
+          "en": [
+            "Jorethang"
+          ],
+          "hi": [
+            "जोरेथांग"
+          ],
+          "ne": [
+            "जोरथाङ"
+          ]
+        },
+        "geonames_id": 7279751,
+        "feature_code": "PPL",
+        "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Jorethang&count=10&countryCode=IN",
+        "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+        "verified_at": "2026-11-15T19:54:29.239417+00:00",
+        "legacy": false
+      },
+      {
+        "id": "loc:ravangla",
+        "name": "Ravangla",
+        "latitude": 27.30589,
+        "longitude": 88.36355,
+        "country_code": "IN",
+        "admin1": "Sikkim",
+        "admin2": "South District",
+        "parent": "loc:namchi_district",
+        "aliases": {
+          "en": [
+            "Ravangla",
+            "Rabongla",
+            "Ravongla"
+          ],
+          "hi": [
+            "रवांगला"
+          ],
+          "ne": [
+            "राबाङ्ला"
+          ]
+        },
+        "geonames_id": 10630194,
+        "feature_code": "PPL",
+        "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Ravangla&count=10&countryCode=IN",
+        "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+        "verified_at": "2026-11-15T19:54:29.239420+00:00",
+        "legacy": false
+      },
+      {
+        "id": "loc:pelling",
+        "name": "Pelling",
+        "latitude": 27.30158,
+        "longitude": 88.23266,
+        "country_code": "IN",
+        "admin1": "Sikkim",
+        "admin2": "West Sikkim",
+        "parent": "loc:gyalshing_district",
+        "aliases": {
+          "en": [
+            "Pelling"
+          ],
+          "hi": [
+            "पेलिंग"
+          ],
+          "ne": [
+            "पेलिङ"
+          ]
+        },
+        "geonames_id": 7114402,
+        "feature_code": "PPL",
+        "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Pelling&count=10&countryCode=IN",
+        "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+        "verified_at": "2026-11-15T19:54:29.239423+00:00",
+        "legacy": false
+      },
+      {
+        "id": "loc:soreng",
+        "name": "Soreng",
+        "latitude": 27.16902,
+        "longitude": 88.20263,
+        "country_code": "IN",
+        "admin1": "Sikkim",
+        "admin2": "Soreng",
+        "parent": "loc:soreng_district",
+        "aliases": {
+          "en": [
+            "Soreng"
+          ],
+          "hi": [
+            "सोरेंग"
+          ],
+          "ne": [
+            "सोरेङ"
+          ]
+        },
+        "geonames_id": 1255707,
+        "feature_code": "PPL",
+        "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Soreng&count=10&countryCode=IN",
+        "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+        "verified_at": "2026-11-15T19:54:29.239426+00:00",
+        "legacy": false
+      },
+      {
+        "id": "loc:lachung",
+        "name": "Lachung",
+        "latitude": 27.6934,
+        "longitude": 88.74429,
+        "country_code": "IN",
+        "admin1": "Sikkim",
+        "admin2": "North District",
+        "parent": "loc:mangan_district",
+        "aliases": {
+          "en": [
+            "Lachung"
+          ],
+          "hi": [
+            "लाचुंग"
+          ],
+          "ne": [
+            "लाचुङ"
+          ]
+        },
+        "geonames_id": 1265346,
+        "feature_code": "PPL",
+        "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Lachung&count=5&countryCode=IN",
+        "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+        "verified_at": "2026-11-15T19:54:29.239429+00:00",
+        "legacy": false
+      }
+    ],
+    "supplemental_variables": [],
+    "limitation": "Verified town points, not district averages. Aliases are deterministic ontology resolution, not trained NER predictions."
+  },
+  "selected": {
+    "environment": {
+      "status": "ok",
+      "message": null,
+      "query": {
+        "schema_version": "1.0",
+        "intent": "COMPARISON",
+        "operation": "COMPARE",
+        "answer_kind": "analysis",
+        "locations": [
+          {
+            "id": "loc:gangtok",
+            "name": "Gangtok",
+            "type": "TOWN",
+            "parent": "loc:gangtok_district"
+          },
+          {
+            "id": "loc:namchi",
+            "name": "Namchi",
+            "type": "TOWN",
+            "parent": "loc:namchi_district"
+          }
+        ],
+        "variables": [
+          "TEMPERATURE",
+          "PRECIPITATION"
+        ],
+        "disasters": [],
+        "time_period": {
+          "type": "date_range",
+          "value": null,
+          "unit": null,
+          "start": "2025-01-01",
+          "end": "2025-01-07"
+        },
+        "scenario": null,
+        "target": null,
+        "context_used": []
+      },
+      "results": [
+        {
+          "location_id": "loc:gangtok",
+          "location_name": "Gangtok",
+          "requested_latitude": 27.32574,
+          "requested_longitude": 88.61216,
+          "grid_latitude": 27.25,
+          "grid_longitude": 88.5,
+          "start": "2025-01-01",
+          "end": "2025-01-07",
+          "timezone": "Asia/Kolkata",
+          "data_kind": "reanalysis",
+          "source": "Open-Meteo / ERA5 reanalysis",
+          "source_url": "https://archive-api.open-meteo.com/v1/archive?latitude=27.32574&longitude=88.61216&start_date=2025-01-01&end_date=2025-01-07&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum%2Crain_sum&timezone=Asia%2FKolkata&temperature_unit=celsius&precipitation_unit=mm&models=era5",
+          "attribution": "Weather data by Open-Meteo.com (CC BY 4.0); historical ERA5: Copernicus Climate Change Service / ECMWF.",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/",
+          "retrieved_at": "2026-11-15T12:27:17.330464Z",
+          "current": null,
+          "daily": [
+            {
+              "date": "2025-01-01",
+              "temperature_mean_c": 8.7,
+              "temperature_min_c": 6.2,
+              "temperature_max_c": 11.7,
+              "precipitation_mm": 2.7,
+              "rainfall_mm": 2.7
+            },
+            {
+              "date": "2025-01-02",
+              "temperature_mean_c": 10.4,
+              "temperature_min_c": 6.4,
+              "temperature_max_c": 15.6,
+              "precipitation_mm": 0.0,
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-03",
+              "temperature_mean_c": 11.9,
+              "temperature_min_c": 6.2,
+              "temperature_max_c": 18.9,
+              "precipitation_mm": 0.0,
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-04",
+              "temperature_mean_c": 12.7,
+              "temperature_min_c": 6.3,
+              "temperature_max_c": 20.0,
+              "precipitation_mm": 0.0,
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-05",
+              "temperature_mean_c": 12.0,
+              "temperature_min_c": 4.9,
+              "temperature_max_c": 18.8,
+              "precipitation_mm": 0.0,
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-06",
+              "temperature_mean_c": 13.0,
+              "temperature_min_c": 10.1,
+              "temperature_max_c": 17.7,
+              "precipitation_mm": 0.0,
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-07",
+              "temperature_mean_c": 9.9,
+              "temperature_min_c": 6.3,
+              "temperature_max_c": 14.4,
+              "precipitation_mm": 9.2,
+              "rainfall_mm": 9.2
+            }
+          ],
+          "summary": {
+            "days": 7,
+            "temperature_mean_c": 11.228571428571428,
+            "temperature_min_c": 4.9,
+            "temperature_max_c": 20.0,
+            "precipitation_total_mm": 11.899999999999999,
+            "rainfall_total_mm": 11.899999999999999,
+            "valid_days": {
+              "temperature_mean_c": 7,
+              "temperature_min_c": 7,
+              "temperature_max_c": 7,
+              "precipitation_mm": 7,
+              "rainfall_mm": 7
+            },
+            "totals_complete": true,
+            "interpretation": "Calculated over available daily values only; incomplete totals are partial. No climate trend significance or prediction is inferred."
+          },
+          "warnings": [
+            "Point grid estimate, not a station observation or district average.",
+            "PRECIPITATION includes rain and snow; historical rainfall is rain_sum; weather-model rainfall is rain_sum + showers_sum.",
+            "RECORDED SNAPSHOT: real previously retrieved reanalysis; no live call was made."
+          ]
+        },
+        {
+          "location_id": "loc:namchi",
+          "location_name": "Namchi",
+          "requested_latitude": 27.16494,
+          "requested_longitude": 88.3638,
+          "grid_latitude": 27.25,
+          "grid_longitude": 88.25,
+          "start": "2025-01-01",
+          "end": "2025-01-07",
+          "timezone": "Asia/Kolkata",
+          "data_kind": "reanalysis",
+          "source": "Open-Meteo / ERA5 reanalysis",
+          "source_url": "https://archive-api.open-meteo.com/v1/archive?latitude=27.16494&longitude=88.3638&start_date=2025-01-01&end_date=2025-01-07&daily=temperature_2m_mean%2Ctemperature_2m_min%2Ctemperature_2m_max%2Cprecipitation_sum%2Crain_sum&timezone=Asia%2FKolkata&temperature_unit=celsius&precipitation_unit=mm&models=era5",
+          "attribution": "Weather data by Open-Meteo.com (CC BY 4.0); historical ERA5: Copernicus Climate Change Service / ECMWF.",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/",
+          "retrieved_at": "2026-11-15T12:27:17.599126Z",
+          "current": null,
+          "daily": [
+            {
+              "date": "2025-01-01",
+              "temperature_mean_c": 10.3,
+              "temperature_min_c": 7.5,
+              "temperature_max_c": 14.2,
+              "precipitation_mm": 1.1,
+              "rainfall_mm": 1.1
+            },
+            {
+              "date": "2025-01-02",
+              "temperature_mean_c": 12.2,
+              "temperature_min_c": 8.6,
+              "temperature_max_c": 18.0,
+              "precipitation_mm": 0.0,
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-03",
+              "temperature_mean_c": 13.2,
+              "temperature_min_c": 7.6,
+              "temperature_max_c": 21.4,
+              "precipitation_mm": 0.0,
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-04",
+              "temperature_mean_c": 13.7,
+              "temperature_min_c": 8.1,
+              "temperature_max_c": 22.5,
+              "precipitation_mm": 0.0,
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-05",
+              "temperature_mean_c": 13.3,
+              "temperature_min_c": 7.5,
+              "temperature_max_c": 20.6,
+              "precipitation_mm": 0.0,
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-06",
+              "temperature_mean_c": 13.2,
+              "temperature_min_c": 9.6,
+              "temperature_max_c": 19.2,
+              "precipitation_mm": 0.0,
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-07",
+              "temperature_mean_c": 10.7,
+              "temperature_min_c": 7.6,
+              "temperature_max_c": 15.7,
+              "precipitation_mm": 3.4,
+              "rainfall_mm": 3.4
+            }
+          ],
+          "summary": {
+            "days": 7,
+            "temperature_mean_c": 12.37142857142857,
+            "temperature_min_c": 7.5,
+            "temperature_max_c": 22.5,
+            "precipitation_total_mm": 4.5,
+            "rainfall_total_mm": 4.5,
+            "valid_days": {
+              "temperature_mean_c": 7,
+              "temperature_min_c": 7,
+              "temperature_max_c": 7,
+              "precipitation_mm": 7,
+              "rainfall_mm": 7
+            },
+            "totals_complete": true,
+            "interpretation": "Calculated over available daily values only; incomplete totals are partial. No climate trend significance or prediction is inferred."
+          },
+          "warnings": [
+            "Point grid estimate, not a station observation or district average.",
+            "PRECIPITATION includes rain and snow; historical rainfall is rain_sum; weather-model rainfall is rain_sum + showers_sum.",
+            "RECORDED SNAPSHOT: real previously retrieved reanalysis; no live call was made."
+          ]
+        }
+      ],
+      "errors": []
+    },
+    "context_id": "fixture-context-id-0123456789abcdef",
+    "explanation": {
+      "status": "disabled",
+      "message": "LLM provider is not configured; environmental data and deterministic analytics remain available.",
+      "language": "en",
+      "text": null,
+      "claims": [],
+      "sources": [],
+      "provider": null,
+      "model": null
+    },
+    "insights": {
+      "status": "ok",
+      "source_mode": "snapshot",
+      "results": [
+        {
+          "location_id": "loc:gangtok",
+          "start": "2025-01-01",
+          "end": "2025-01-07",
+          "timezone": "Asia/Kolkata",
+          "temperature_days": {
+            "highest": {
+              "value": 13.0,
+              "date": "2025-01-06",
+              "tied_dates": [
+                "2025-01-06"
+              ]
+            },
+            "lowest": {
+              "value": 8.7,
+              "date": "2025-01-01",
+              "tied_dates": [
+                "2025-01-01"
+              ]
+            },
+            "unit": "°C"
+          },
+          "rainfall_days": {
+            "highest": {
+              "value": 9.2,
+              "date": "2025-01-07",
+              "tied_dates": [
+                "2025-01-07"
+              ]
+            },
+            "lowest": {
+              "value": 0.0,
+              "date": "2025-01-02",
+              "tied_dates": [
+                "2025-01-02",
+                "2025-01-03",
+                "2025-01-04",
+                "2025-01-05",
+                "2025-01-06"
+              ]
+            },
+            "unit": "mm"
+          },
+          "period_temperature_range_c": 15.1,
+          "daily_variation": [
+            {
+              "date": "2025-01-01",
+              "temperature_range_c": 5.499999999999999
+            },
+            {
+              "date": "2025-01-02",
+              "temperature_range_c": 9.2
+            },
+            {
+              "date": "2025-01-03",
+              "temperature_range_c": 12.7
+            },
+            {
+              "date": "2025-01-04",
+              "temperature_range_c": 13.7
+            },
+            {
+              "date": "2025-01-05",
+              "temperature_range_c": 13.9
+            },
+            {
+              "date": "2025-01-06",
+              "temperature_range_c": 7.6
+            },
+            {
+              "date": "2025-01-07",
+              "temperature_range_c": 8.100000000000001
+            }
+          ],
+          "day_to_day": [
+            {
+              "date": "2025-01-02",
+              "previous_date": "2025-01-01",
+              "temperature_mean_change_c": 1.700000000000001
+            },
+            {
+              "date": "2025-01-03",
+              "previous_date": "2025-01-02",
+              "temperature_mean_change_c": 1.5
+            },
+            {
+              "date": "2025-01-04",
+              "previous_date": "2025-01-03",
+              "temperature_mean_change_c": 0.7999999999999989
+            },
+            {
+              "date": "2025-01-05",
+              "previous_date": "2025-01-04",
+              "temperature_mean_change_c": -0.6999999999999993
+            },
+            {
+              "date": "2025-01-06",
+              "previous_date": "2025-01-05",
+              "temperature_mean_change_c": 1.0
+            },
+            {
+              "date": "2025-01-07",
+              "previous_date": "2025-01-06",
+              "temperature_mean_change_c": -3.0999999999999996
+            }
+          ],
+          "rainfall_distribution": [
+            {
+              "date": "2025-01-01",
+              "rainfall_mm": 2.7
+            },
+            {
+              "date": "2025-01-02",
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-03",
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-04",
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-05",
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-06",
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-07",
+              "rainfall_mm": 9.2
+            }
+          ],
+          "coverage": {
+            "temperature_mean_c": {
+              "valid": 7,
+              "missing": 0,
+              "expected": 7
+            },
+            "temperature_min_c": {
+              "valid": 7,
+              "missing": 0,
+              "expected": 7
+            },
+            "temperature_max_c": {
+              "valid": 7,
+              "missing": 0,
+              "expected": 7
+            },
+            "rainfall_mm": {
+              "valid": 7,
+              "missing": 0,
+              "expected": 7
+            },
+            "precipitation_mm": {
+              "valid": 7,
+              "missing": 0,
+              "expected": 7
+            }
+          },
+          "monthly": [
+            {
+              "month": "2025-01",
+              "retrieved_days": 7,
+              "temperature_valid_days": 7,
+              "rainfall_valid_days": 7,
+              "temperature_mean_c": 11.228571428571428,
+              "rainfall_total_mm": 11.899999999999999,
+              "period_start": "2025-01-01",
+              "period_end": "2025-01-07",
+              "label": "Retrieved portion of calendar month; not necessarily a complete month"
+            }
+          ],
+          "tie_rule": "Earliest date is primary; all tied dates listed. Warmest/coolest use daily mean, wettest/driest use daily rainfall. Zero rainfall is a valid dry day.",
+          "limitation": "Available grid estimates only. Missing values are not zero; extrema may miss unobserved days. No significance, causal attribution or long-term climate trend is inferred."
+        },
+        {
+          "location_id": "loc:namchi",
+          "start": "2025-01-01",
+          "end": "2025-01-07",
+          "timezone": "Asia/Kolkata",
+          "temperature_days": {
+            "highest": {
+              "value": 13.7,
+              "date": "2025-01-04",
+              "tied_dates": [
+                "2025-01-04"
+              ]
+            },
+            "lowest": {
+              "value": 10.3,
+              "date": "2025-01-01",
+              "tied_dates": [
+                "2025-01-01"
+              ]
+            },
+            "unit": "°C"
+          },
+          "rainfall_days": {
+            "highest": {
+              "value": 3.4,
+              "date": "2025-01-07",
+              "tied_dates": [
+                "2025-01-07"
+              ]
+            },
+            "lowest": {
+              "value": 0.0,
+              "date": "2025-01-02",
+              "tied_dates": [
+                "2025-01-02",
+                "2025-01-03",
+                "2025-01-04",
+                "2025-01-05",
+                "2025-01-06"
+              ]
+            },
+            "unit": "mm"
+          },
+          "period_temperature_range_c": 15.0,
+          "daily_variation": [
+            {
+              "date": "2025-01-01",
+              "temperature_range_c": 6.699999999999999
+            },
+            {
+              "date": "2025-01-02",
+              "temperature_range_c": 9.4
+            },
+            {
+              "date": "2025-01-03",
+              "temperature_range_c": 13.799999999999999
+            },
+            {
+              "date": "2025-01-04",
+              "temperature_range_c": 14.4
+            },
+            {
+              "date": "2025-01-05",
+              "temperature_range_c": 13.100000000000001
+            },
+            {
+              "date": "2025-01-06",
+              "temperature_range_c": 9.6
+            },
+            {
+              "date": "2025-01-07",
+              "temperature_range_c": 8.1
+            }
+          ],
+          "day_to_day": [
+            {
+              "date": "2025-01-02",
+              "previous_date": "2025-01-01",
+              "temperature_mean_change_c": 1.8999999999999986
+            },
+            {
+              "date": "2025-01-03",
+              "previous_date": "2025-01-02",
+              "temperature_mean_change_c": 1.0
+            },
+            {
+              "date": "2025-01-04",
+              "previous_date": "2025-01-03",
+              "temperature_mean_change_c": 0.5
+            },
+            {
+              "date": "2025-01-05",
+              "previous_date": "2025-01-04",
+              "temperature_mean_change_c": -0.3999999999999986
+            },
+            {
+              "date": "2025-01-06",
+              "previous_date": "2025-01-05",
+              "temperature_mean_change_c": -0.10000000000000142
+            },
+            {
+              "date": "2025-01-07",
+              "previous_date": "2025-01-06",
+              "temperature_mean_change_c": -2.5
+            }
+          ],
+          "rainfall_distribution": [
+            {
+              "date": "2025-01-01",
+              "rainfall_mm": 1.1
+            },
+            {
+              "date": "2025-01-02",
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-03",
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-04",
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-05",
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-06",
+              "rainfall_mm": 0.0
+            },
+            {
+              "date": "2025-01-07",
+              "rainfall_mm": 3.4
+            }
+          ],
+          "coverage": {
+            "temperature_mean_c": {
+              "valid": 7,
+              "missing": 0,
+              "expected": 7
+            },
+            "temperature_min_c": {
+              "valid": 7,
+              "missing": 0,
+              "expected": 7
+            },
+            "temperature_max_c": {
+              "valid": 7,
+              "missing": 0,
+              "expected": 7
+            },
+            "rainfall_mm": {
+              "valid": 7,
+              "missing": 0,
+              "expected": 7
+            },
+            "precipitation_mm": {
+              "valid": 7,
+              "missing": 0,
+              "expected": 7
+            }
+          },
+          "monthly": [
+            {
+              "month": "2025-01",
+              "retrieved_days": 7,
+              "temperature_valid_days": 7,
+              "rainfall_valid_days": 7,
+              "temperature_mean_c": 12.37142857142857,
+              "rainfall_total_mm": 4.5,
+              "period_start": "2025-01-01",
+              "period_end": "2025-01-07",
+              "label": "Retrieved portion of calendar month; not necessarily a complete month"
+            }
+          ],
+          "tie_rule": "Earliest date is primary; all tied dates listed. Warmest/coolest use daily mean, wettest/driest use daily rainfall. Zero rainfall is a valid dry day.",
+          "limitation": "Available grid estimates only. Missing values are not zero; extrema may miss unobserved days. No significance, causal attribution or long-term climate trend is inferred."
+        }
+      ],
+      "comparisons": [
+        {
+          "left": "loc:gangtok",
+          "right": "loc:namchi",
+          "start": "2025-01-01",
+          "end": "2025-01-07",
+          "temperature_difference_c": -1.1428571428571423,
+          "rainfall_difference_mm": 7.399999999999999,
+          "warmer": "loc:namchi",
+          "wetter": "loc:gangtok",
+          "warnings": [],
+          "temperature_mean_c_coverage": {
+            "loc:gangtok": 7,
+            "loc:namchi": 7
+          },
+          "rainfall_mm_coverage": {
+            "loc:gangtok": 7,
+            "loc:namchi": 7
+          }
+        }
+      ],
+      "message": null
+    },
+    "inference": "Explicit user-selected registry points and dates; no trained NLP prediction."
+  },
+  "measurements": {
+    "status": "ok",
+    "message": null,
+    "results": [
+      {
+        "location_id": "loc:gangtok",
+        "location_name": "Gangtok",
+        "requested_latitude": 27.32574,
+        "requested_longitude": 88.61216,
+        "grid_latitude": 27.25,
+        "grid_longitude": 88.5,
+        "start": "2025-01-01",
+        "end": "2025-01-07",
+        "timezone": "Asia/Kolkata",
+        "data_kind": "reanalysis",
+        "source": "Open-Meteo ERA5",
+        "source_url": "https://archive-api.open-meteo.com/v1/archive?latitude=27.32574&longitude=88.61216&start_date=2025-01-01&end_date=2025-01-07&timezone=Asia%2FKolkata&daily=relative_humidity_2m_mean%2Cwind_speed_10m_mean&wind_speed_unit=ms&models=era5",
+        "attribution": "Open-Meteo / ECMWF Copernicus; CC BY 4.0",
+        "retrieved_at": "2026-11-15T20:03:59.960079+00:00",
+        "daily": [
+          {
+            "date": "2025-01-01",
+            "HUMIDITY": 90,
+            "WIND_SPEED": 0.71
+          },
+          {
+            "date": "2025-01-02",
+            "HUMIDITY": 80,
+            "WIND_SPEED": 0.84
+          },
+          {
+            "date": "2025-01-03",
+            "HUMIDITY": 74,
+            "WIND_SPEED": 0.84
+          },
+          {
+            "date": "2025-01-04",
+            "HUMIDITY": 71,
+            "WIND_SPEED": 0.8
+          },
+          {
+            "date": "2025-01-05",
+            "HUMIDITY": 69,
+            "WIND_SPEED": 0.8
+          },
+          {
+            "date": "2025-01-06",
+            "HUMIDITY": 71,
+            "WIND_SPEED": 0.83
+          },
+          {
+            "date": "2025-01-07",
+            "HUMIDITY": 84,
+            "WIND_SPEED": 0.64
+          }
+        ],
+        "summary": {
+          "HUMIDITY": {
+            "mean": 77.0,
+            "minimum": 69,
+            "maximum": 90,
+            "unit": "%",
+            "valid_days": 7,
+            "missing_days": 0,
+            "expected_days": 7
+          },
+          "WIND_SPEED": {
+            "mean": 0.78,
+            "minimum": 0.64,
+            "maximum": 0.84,
+            "unit": "m/s",
+            "valid_days": 7,
+            "missing_days": 0,
+            "expected_days": 7
+          }
+        },
+        "limitations": [
+          "Daily means of 2 m relative humidity and/or 10 m scalar wind speed; period mean is the arithmetic mean of valid daily means, not a gust or vector wind.",
+          "Available grid estimates only; missing days omitted, never zero-filled. Today may include forecast hours. No station measurement, causal claim or significance test.",
+          "Separate supplemental product; these facts are not included in the weather GenAI context."
+        ]
+      }
+    ],
+    "errors": [],
+    "query": {
+      "schema_version": "1.0",
+      "intent": "WEATHER_QUERY",
+      "operation": "LOOKUP",
+      "answer_kind": "observation",
+      "locations": [
+        {
+          "id": "loc:gangtok",
+          "name": "Gangtok",
+          "type": "TOWN",
+          "parent": null
+        }
+      ],
+      "variables": [
+        "HUMIDITY",
+        "WIND_SPEED"
+      ],
+      "disasters": [],
+      "time_period": {
+        "type": "date_range",
+        "value": null,
+        "unit": null,
+        "start": "2025-01-01",
+        "end": "2025-01-07"
+      },
+      "scenario": null,
+      "target": null,
+      "context_used": []
+    }
+  }
+}

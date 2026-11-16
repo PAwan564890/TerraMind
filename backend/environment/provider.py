@@ -10,13 +10,8 @@ from backend.environment.schema import DailyRow, WeatherResult
 
 ARCHIVE = 'https://archive-api.open-meteo.com/v1/archive'
 FORECAST = 'https://api.open-meteo.com/v1/forecast'
-# GeoNames coordinates verified through Open-Meteo geocoding (2026-11-15).
-# Town points only; these do not represent district/state spatial averages.
-LOCATIONS = {
-    'loc:gangtok': ('Gangtok', 27.32574, 88.61216),
-    'loc:namchi': ('Namchi', 27.16494, 88.36380),
-    'loc:mangan': ('Mangan', 27.50965, 88.52206),
-}
+from backend.environment.registry import LOCATIONS
+from backend.environment.transport import get_json, RetrievalFailure
 FIELDS = {
     'temperature_mean_c': 'temperature_2m_mean',
     'temperature_min_c': 'temperature_2m_min',
@@ -63,15 +58,10 @@ class OpenMeteo:
             warnings.append('RECORDED SNAPSHOT: real previously retrieved reanalysis; no live call was made.')
         else:
             try:
-                with httpx.Client(timeout=httpx.Timeout(20, connect=8), transport=self.transport) as client:
-                    response = client.get(endpoint, params=params)
-                    response.raise_for_status()
-                    payload = response.json()
-                    source_url = str(response.url)
+                payload, source_url = get_json(endpoint,params,self.transport)
                 retrieved = datetime.now(timezone.utc)
-            except (httpx.HTTPError, ValueError) as error:
-                # No silently substituted data, and no remote body echoed into the UI.
-                raise DataUnavailable('Open-Meteo request failed; retry or explicitly select a recorded snapshot.') from error
+            except RetrievalFailure as error:
+                raise DataUnavailable(str(error)) from error
         try:
             if not isinstance(payload, dict):
                 raise ValueError('expected object')
@@ -136,4 +126,4 @@ class OpenMeteo:
                 source_url=source_url, attribution='Weather data by Open-Meteo.com (CC BY 4.0); historical ERA5: Copernicus Climate Change Service / ECMWF.',
                 retrieved_at=retrieved, current=current, daily=rows, summary=summary, warnings=warnings)
         except (KeyError, TypeError, ValueError, OverflowError) as error:
-            raise DataUnavailable('Open-Meteo returned invalid or incomplete data; no result was substituted.') from error
+            raise DataUnavailable('Open-Meteo returned invalid or incomplete data [code=invalid_response]; no result was substituted.') from error

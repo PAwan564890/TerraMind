@@ -1,0 +1,47 @@
+{
+  "url": "https://archive-api.open-meteo.com/v1/archive?latitude=27.32574&longitude=88.61216&start_date=2025-01-01&end_date=2025-01-07&daily=relative_humidity_2m_mean%2Cwind_speed_10m_mean&timezone=Asia%2FKolkata&models=era5&wind_speed_unit=ms",
+  "status": 200,
+  "response": {
+    "latitude": 27.25,
+    "longitude": 88.5,
+    "generationtime_ms": 0.07772445678710938,
+    "utc_offset_seconds": 19800,
+    "timezone": "Asia/Kolkata",
+    "timezone_abbreviation": "GMT+5:30",
+    "elevation": 1636.0,
+    "daily_units": {
+      "time": "iso8601",
+      "relative_humidity_2m_mean": "%",
+      "wind_speed_10m_mean": "m/s"
+    },
+    "daily": {
+      "time": [
+        "2025-01-01",
+        "2025-01-02",
+        "2025-01-03",
+        "2025-01-04",
+        "2025-01-05",
+        "2025-01-06",
+        "2025-01-07"
+      ],
+      "relative_humidity_2m_mean": [
+        90,
+        80,
+        74,
+        71,
+        69,
+        71,
+        84
+      ],
+      "wind_speed_10m_mean": [
+        0.71,
+        0.84,
+        0.84,
+        0.8,
+        0.8,
+        0.83,
+        0.64
+      ]
+    }
+  }
+}

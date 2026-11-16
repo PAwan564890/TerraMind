@@ -39,7 +39,7 @@ with st.sidebar:
     language_code = {'Automatic':None, 'English':'en', 'Hindi':'hi', 'Nepali':'ne'}[explanation_language]
     st.caption('GenAI: ' + ('configured' if system.get('genai', {}).get('configured') else 'not configured — data and analytics still work'))
     mode = 'demo' if selected_mode == 'Rule demonstration' else 'trained'
-    st.caption('Supported data points: Gangtok, Namchi, Mangan. Dates use Asia/Kolkata. Historical results are ERA5 reanalysis; current/recent results are weather model estimates.')
+    st.caption('Supported data points: ' + (', '.join(system.get('towns', {}).values()) or 'Not exposed by backend') + '. Dates use Asia/Kolkata. Historical results are ERA5 reanalysis; current/recent results are weather model estimates.')
     if st.button('New conversation'):
         st.session_state.session_id = uuid.uuid4().hex
         st.session_state.pop('result', None)

@@ -1,3 +1,6 @@
+import Geospatial from "./Geospatial";
+import Measurements from "./Measurements";
+import { InsightsLoader } from "./Insights";
 import Assistant from "./Assistant";
 import Comparison from "./Comparison";
 import { PageHeading } from "./UI";
@@ -14,13 +17,14 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { api } from "./api";
-import type {Health,System,Run} from "./contracts";
-import {Notice,Results} from "./Results";
+import type { Health, System, Run } from "./contracts";
+import { Notice, Results } from "./Results";
 const navigation = [
   ["/", "Overview", LayoutDashboard],
   ["/assistant", "AI assistant", MessagesSquare],
   ["/analytics", "Climate analytics", ChartNoAxesCombined],
   ["/comparison", "Location comparison", MapPinned],
+  ["/map", "Environmental map", Mountain],
   ["/transparency", "Model & data", ShieldCheck],
 ] as const;
 export default function App() {
@@ -78,7 +82,7 @@ export default function App() {
         <div className="sidebar-bottom">
           <span className="live-dot" /> Academic prototype
           <p>
-            Three town points.
+            Verified town points.
             <br />
             Evidence before explanation.
           </p>
@@ -105,6 +109,7 @@ export default function App() {
         </header>
         <main id="main">
           <Routes>
+            <Route path="/map" element={<Geospatial />} />
             <Route
               path="/"
               element={
@@ -175,6 +180,18 @@ export default function App() {
                       and weather-model estimates; optional recorded snapshots.
                     </p>
                   </section>
+                  {system?.capabilities && (
+                    <p className="muted">
+                      Supplemental measurements enabled:{" "}
+                      {system.capabilities.additional_measurements.join(", ") ||
+                        "None"}
+                      .{" "}
+                      <Link to="/map">
+                        Open the environmental map and registry
+                      </Link>
+                      .
+                    </p>
+                  )}
                   <Limitations system={system} />
                 </>
               }
@@ -204,7 +221,7 @@ export default function App() {
                     title="The data behind the answer."
                     description="Descriptive statistics from retrieved daily values. No inferred climate significance."
                   />
-                  {run?.bundle ? (
+                  {run?.bundle || run?.measurements ? (
                     <>
                       <Notice>
                         {run.source === "snapshot"
@@ -212,7 +229,18 @@ export default function App() {
                           : "Live retrieval selected."}{" "}
                         Query: {run.question}
                       </Notice>
-                      <Results environment={run.bundle.environment} />
+                      {run.bundle && (
+                        <>
+                          <InsightsLoader
+                            session={session}
+                            context={run.bundle.context_id}
+                          />
+                          <Results environment={run.bundle.environment} />
+                        </>
+                      )}
+                      {run.measurements && (
+                        <Measurements value={run.measurements} />
+                      )}
                     </>
                   ) : (
                     <Empty />
@@ -348,7 +376,7 @@ function Limitations({ system }: { system: System | null }) {
       <ul>
         {(
           system?.limitations || [
-            "Backend status unavailable. Three town points only; no disaster prediction, causal inference or validated climate trends.",
+            "Backend status unavailable. Verified town points only; no disaster prediction, causal inference or validated climate trends.",
           ]
         ).map((l) => (
           <li key={l}>{l}</li>

@@ -1,3 +1,6 @@
+import PipelineInspector from "./PipelineInspector";
+import Measurements from "./Measurements";
+import { InsightsLoader } from "./Insights";
 import { useEffect, useRef, useState } from "react";
 import { api } from "./api";
 import { PageHeading } from "./UI";
@@ -79,6 +82,20 @@ export default function Assistant({
       const initial: Run = { question, mode, source, analysis, bundle: null };
       if (!c.signal.aborted) setRun(initial);
       if (analysis.status === "ok" && analysis.structured_query) {
+        if (
+          analysis.structured_query.variables.length &&
+          analysis.structured_query.variables.every((v) =>
+            ["HUMIDITY", "WIND_SPEED"].includes(v),
+          )
+        ) {
+          const measurements = await api.measurements(
+            analysis.structured_query,
+            source,
+            c.signal,
+          );
+          if (!c.signal.aborted) setRun({ ...initial, measurements });
+          return;
+        }
         const bundle = await api.session(
           analysis.structured_query,
           session,
@@ -247,6 +264,12 @@ export default function Assistant({
           {error}
         </div>
       )}
+      <PipelineInspector
+        run={run}
+        route={route}
+        explanation={answer ?? run?.bundle?.explanation ?? null}
+        configured={system?.genai}
+      />
       {route &&
         route.category !== "environment" &&
         route.category !== "contextual" && (
@@ -371,6 +394,7 @@ export default function Assistant({
                 </pre>
               </details>
             </section>
+            {run.measurements && <Measurements value={run.measurements} />}
             {run.bundle && (
               <>
                 <Notice>
@@ -378,6 +402,10 @@ export default function Assistant({
                     ? "RECORDED SNAPSHOT — not live data"
                     : "Live source selected. See retrieval timestamps below."}
                 </Notice>
+                <InsightsLoader
+                  session={session}
+                  context={run.bundle.context_id}
+                />
                 <Results environment={run.bundle.environment} />
                 <AIExplanation value={run.bundle.explanation} />
                 {run.bundle.context_id && (

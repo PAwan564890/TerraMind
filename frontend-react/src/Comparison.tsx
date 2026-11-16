@@ -1,3 +1,4 @@
+import Insights from "./Insights";
 import { useEffect, useRef, useState } from "react";
 import { api } from "./api";
 import { PageHeading } from "./UI";
@@ -20,6 +21,16 @@ export default function Comparison({ system }: { system: System | null }) {
     [result, setResult] = useState<Run | null>(null),
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
+  useEffect(() => {
+    const ids = new URLSearchParams(window.location.search).getAll("town");
+    if (
+      system &&
+      ids.length === 2 &&
+      ids[0] !== ids[1] &&
+      ids.every((id) => id in system.towns)
+    )
+      setTowns(ids.map((id) => system.towns[id]));
+  }, [system]);
   const active = useRef<AbortController | null>(null);
   useEffect(() => () => active.current?.abort(), []);
   async function compare(e: React.FormEvent) {
@@ -55,8 +66,20 @@ export default function Comparison({ system }: { system: System | null }) {
           "en",
           c.signal,
         );
+      const insights = bundle?.context_id
+        ? await api
+            .insights(session, bundle.context_id, c.signal)
+            .catch(() => undefined)
+        : undefined;
       if (!c.signal.aborted)
-        setResult({ question, analysis, bundle, mode: "trained", source });
+        setResult({
+          question,
+          analysis,
+          bundle,
+          insights,
+          mode: "trained",
+          source,
+        });
     } catch (e) {
       if (!c.signal.aborted) setError((e as Error).message);
     } finally {
@@ -157,6 +180,7 @@ export default function Comparison({ system }: { system: System | null }) {
           )}
           {result.bundle ? (
             <>
+              {result.insights && <Insights value={result.insights} />}
               <div className="comparison-summary">
                 {result.bundle.environment.results.map((r) => (
                   <div className="panel" key={r.location_id}>

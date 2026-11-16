@@ -674,3 +674,21 @@ footer {
 .ai .explanation {
   overflow-wrap: anywhere;
 }
+
+.town-map {
+  height: 380px;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #c8d6d3;
+  margin: 20px 0;
+  z-index: 0;
+}
+.leaflet-interactive:focus {
+  outline: 3px solid #172b38;
+  outline-offset: 4px;
+}
+@media (max-width: 700px) {
+  .town-map {
+    height: 300px;
+  }
+}

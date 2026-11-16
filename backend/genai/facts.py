@@ -2,6 +2,7 @@
 import math
 from itertools import combinations
 from backend.environment.analytics import summarize
+from backend.environment.insights import temporal
 from backend.genai.schema import Fact, Source
 
 METRICS = {
@@ -34,6 +35,12 @@ def compile_facts(context):
                 start=weather.start.isoformat(), end=weather.end.isoformat(),
                 source_ids=[source_id], metric=metric,
                 coverage=f'{valid}/{summary["days"]}'))
+        insight = temporal(weather)
+        for metric,field,side,unit in [('warmest_day','temperature_days','highest','°C'),('coolest_day','temperature_days','lowest','°C'),('wettest_day','rainfall_days','highest','mm'),('driest_day','rainfall_days','lowest','mm')]:
+            event=insight[field][side]
+            coverage_field='temperature_mean_c' if field=='temperature_days' else 'rainfall_mm'
+            if event is not None:
+                facts.append(Fact(fact_id=f'{i}:{metric}',value=f'{event["value"]:.2f}',unit=unit,location_ids=[weather.location_id],location_names=[weather.location_name],start=weather.start.isoformat(),end=weather.end.isoformat(),event_dates=[event['date']],source_ids=[source_id],metric=metric,coverage=f'{summary["valid_days"][coverage_field]}/{summary["days"]}'))
     # Comparison arithmetic belongs HERE, not in the model. Only compare full,
     # identical coverage and periods; no false inference from partial totals.
     for a, b in combinations(range(len(summaries)), 2):
@@ -63,10 +70,14 @@ LABELS = {
            'औसत तापक्रमको अन्तर','वर्षाको अन्तर'],
 }
 KEYS = [*METRICS, 'difference_temperature_mean_c','difference_rainfall_total_mm']
+KEYS.extend(['warmest_day','coolest_day','wettest_day','driest_day'])
+LABELS['en'].extend(['Warmest available day (daily mean; earliest tie)','Coolest available day (daily mean; earliest tie)','Wettest available day (rainfall; earliest tie)','Driest available day (rainfall; earliest tie)'])
+LABELS['hi'].extend(['सबसे गर्म उपलब्ध दिन (दैनिक औसत; बराबरी में पहला दिन)','सबसे ठंडा उपलब्ध दिन (दैनिक औसत; बराबरी में पहला दिन)','सबसे अधिक बारिश वाला उपलब्ध दिन (बराबरी में पहला दिन)','सबसे कम बारिश वाला उपलब्ध दिन (बराबरी में पहला दिन)'])
+LABELS['ne'].extend(['सबैभन्दा न्यानो उपलब्ध दिन (दैनिक औसत; बराबरीमा पहिलो दिन)','सबैभन्दा चिसो उपलब्ध दिन (दैनिक औसत; बराबरीमा पहिलो दिन)','सबैभन्दा बढी वर्षा भएको उपलब्ध दिन (बराबरीमा पहिलो दिन)','सबैभन्दा कम वर्षा भएको उपलब्ध दिन (बराबरीमा पहिलो दिन)'])
 NOTICES = {
-    'en': 'AI selected these validated facts from the stored environmental results. Values are deterministic summaries of available daily data; coverage is shown per fact. Differences use left minus right. These are grid reanalysis/weather-model estimates, not station observations. No forecast, hazard or causal claim is made. Recorded snapshots are not live retrievals.',
-    'hi': 'AI ने संग्रहीत पर्यावरणीय परिणामों से ये सत्यापित तथ्य चुने हैं। मान उपलब्ध दैनिक डेटा के गणितीय सारांश हैं; प्रत्येक तथ्य के साथ डेटा की उपलब्धता दी गई है। अंतर बाएँ स्थान से दाएँ स्थान को घटाकर है। ये ग्रिड पुनर्विश्लेषण या मौसम मॉडल के अनुमान हैं, स्टेशन मापन नहीं। भविष्यवाणी, आपदा या कारण का दावा नहीं किया गया है। संग्रहीत स्नैपशॉट लाइव डेटा नहीं हैं।',
-    'ne': 'AI ले भण्डारित वातावरणीय नतिजाबाट यी प्रमाणित तथ्य छानेको छ। मानहरू उपलब्ध दैनिक तथ्याङ्कका गणितीय सारांश हुन्; हरेक तथ्यसँग उपलब्धता देखाइएको छ। अन्तर बायाँ स्थानबाट दायाँ स्थान घटाएर हो। यी ग्रिड पुनर्विश्लेषण वा मौसम मोडेलका अनुमान हुन्, स्टेशनका मापन होइनन्। भविष्यवाणी, विपद् वा कारणको दाबी गरिएको छैन। भण्डारित स्न्यापसट प्रत्यक्ष डेटा होइनन्।',
+    'en': 'AI selected these validated facts from the stored environmental results. Values are deterministic summaries of available daily data; coverage is shown per fact. Differences use left minus right. These are grid reanalysis/weather-model estimates, not station observations. No forecast, hazard or causal claim is made. Recorded snapshots are not live retrievals. For day extrema, event dates are listed separately; the period and coverage refer to the retrieved range and the first tied date is primary.',
+    'hi': 'AI ने संग्रहीत पर्यावरणीय परिणामों से ये सत्यापित तथ्य चुने हैं। मान उपलब्ध दैनिक डेटा के गणितीय सारांश हैं; प्रत्येक तथ्य के साथ डेटा की उपलब्धता दी गई है। अंतर बाएँ स्थान से दाएँ स्थान को घटाकर है। ये ग्रिड पुनर्विश्लेषण या मौसम मॉडल के अनुमान हैं, स्टेशन मापन नहीं। भविष्यवाणी, आपदा या कारण का दावा नहीं किया गया है। संग्रहीत स्नैपशॉट लाइव डेटा नहीं हैं। चरम दिन की तारीख अलग दी गई है; अवधि और उपलब्धता पूरी प्राप्त अवधि की हैं, बराबरी में पहला दिन मुख्य है।',
+    'ne': 'AI ले भण्डारित वातावरणीय नतिजाबाट यी प्रमाणित तथ्य छानेको छ। मानहरू उपलब्ध दैनिक तथ्याङ्कका गणितीय सारांश हुन्; हरेक तथ्यसँग उपलब्धता देखाइएको छ। अन्तर बायाँ स्थानबाट दायाँ स्थान घटाएर हो। यी ग्रिड पुनर्विश्लेषण वा मौसम मोडेलका अनुमान हुन्, स्टेशनका मापन होइनन्। भविष्यवाणी, विपद् वा कारणको दाबी गरिएको छैन। भण्डारित स्न्यापसट प्रत्यक्ष डेटा होइनन्। चरम दिनको मिति अलग दिइएको छ; अवधि र उपलब्धता प्राप्त सम्पूर्ण अवधिको हो, बराबरीमा पहिलो दिन मुख्य हो।',
 }
 
 
@@ -74,6 +85,8 @@ def render(language, facts, sources):
     lines = [NOTICES[language]]
     for fact in facts:
         label = LABELS[language][KEYS.index(fact.metric)]
+        if fact.event_dates:
+            label += ' (' + ', '.join(fact.event_dates) + ')'
         places = ' − '.join(fact.location_names)
         lines.append(f'{places} · {fact.start} — {fact.end}: {label}: {fact.value} {fact.unit} '
                      f'[{fact.coverage}; {", ".join(fact.source_ids)}].')

@@ -1,0 +1,282 @@
+[
+  {
+    "id": "loc:gangtok",
+    "name": "Gangtok",
+    "latitude": 27.32574,
+    "longitude": 88.61216,
+    "country_code": "IN",
+    "admin1": "Sikkim",
+    "admin2": "Gangtok district",
+    "parent": "loc:gangtok_district",
+    "aliases": {
+      "en": [
+        "Gangtok",
+        "Gantok"
+      ],
+      "hi": [
+        "गंगटोक",
+        "गंगतोक"
+      ],
+      "ne": [
+        "गान्तोक",
+        "गांतोक",
+        "गान्तोग"
+      ]
+    },
+    "geonames_id": 1271631,
+    "feature_code": "PPLA",
+    "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Gangtok&count=10&countryCode=IN",
+    "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+    "verified_at": "2026-11-15T19:54:29.239383+00:00",
+    "legacy": true
+  },
+  {
+    "id": "loc:namchi",
+    "name": "Namchi",
+    "latitude": 27.16494,
+    "longitude": 88.3638,
+    "country_code": "IN",
+    "admin1": "Sikkim",
+    "admin2": "South District",
+    "parent": "loc:namchi_district",
+    "aliases": {
+      "en": [
+        "Namchi"
+      ],
+      "hi": [
+        "नामची"
+      ],
+      "ne": [
+        "नाम्ची"
+      ]
+    },
+    "geonames_id": 1262029,
+    "feature_code": "PPL",
+    "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Namchi&count=10&countryCode=IN",
+    "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+    "verified_at": "2026-11-15T19:54:29.239401+00:00",
+    "legacy": true
+  },
+  {
+    "id": "loc:mangan",
+    "name": "Mangan",
+    "latitude": 27.50965,
+    "longitude": 88.52206,
+    "country_code": "IN",
+    "admin1": "Sikkim",
+    "admin2": "North District",
+    "parent": "loc:mangan_district",
+    "aliases": {
+      "en": [
+        "Mangan"
+      ],
+      "hi": [
+        "मंगन"
+      ],
+      "ne": [
+        "मङ्गन"
+      ]
+    },
+    "geonames_id": 1263776,
+    "feature_code": "PPL",
+    "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Mangan&count=10&countryCode=IN",
+    "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+    "verified_at": "2026-11-15T19:54:29.239407+00:00",
+    "legacy": true
+  },
+  {
+    "id": "loc:gyalshing",
+    "name": "Gyalshing",
+    "latitude": 27.28952,
+    "longitude": 88.25764,
+    "country_code": "IN",
+    "admin1": "Sikkim",
+    "admin2": "West Sikkim",
+    "parent": "loc:gyalshing_district",
+    "aliases": {
+      "en": [
+        "Gyalshing",
+        "Geyzing",
+        "Gyalzing"
+      ],
+      "hi": [
+        "ग्यालशिंग",
+        "गेजिंग"
+      ],
+      "ne": [
+        "ग्याल्सिङ",
+        "गेजिङ"
+      ]
+    },
+    "geonames_id": 1270577,
+    "feature_code": "PPLA2",
+    "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Gyalshing&count=10&countryCode=IN",
+    "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+    "verified_at": "2026-11-15T19:54:29.239410+00:00",
+    "legacy": false
+  },
+  {
+    "id": "loc:rangpo",
+    "name": "Rangpo",
+    "latitude": 27.17733,
+    "longitude": 88.53358,
+    "country_code": "IN",
+    "admin1": "Sikkim",
+    "admin2": "Pakyong",
+    "parent": "loc:pakyong_district",
+    "aliases": {
+      "en": [
+        "Rangpo"
+      ],
+      "hi": [
+        "रंगपो"
+      ],
+      "ne": [
+        "रङ्पो"
+      ]
+    },
+    "geonames_id": 1258484,
+    "feature_code": "PPL",
+    "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Rangpo&count=10&countryCode=IN",
+    "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+    "verified_at": "2026-11-15T19:54:29.239413+00:00",
+    "legacy": false
+  },
+  {
+    "id": "loc:jorethang",
+    "name": "Jorethang",
+    "latitude": 27.10696,
+    "longitude": 88.32332,
+    "country_code": "IN",
+    "admin1": "Sikkim",
+    "admin2": null,
+    "parent": "loc:namchi_district",
+    "aliases": {
+      "en": [
+        "Jorethang"
+      ],
+      "hi": [
+        "जोरेथांग"
+      ],
+      "ne": [
+        "जोरथाङ"
+      ]
+    },
+    "geonames_id": 7279751,
+    "feature_code": "PPL",
+    "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Jorethang&count=10&countryCode=IN",
+    "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+    "verified_at": "2026-11-15T19:54:29.239417+00:00",
+    "legacy": false
+  },
+  {
+    "id": "loc:ravangla",
+    "name": "Ravangla",
+    "latitude": 27.30589,
+    "longitude": 88.36355,
+    "country_code": "IN",
+    "admin1": "Sikkim",
+    "admin2": "South District",
+    "parent": "loc:namchi_district",
+    "aliases": {
+      "en": [
+        "Ravangla",
+        "Rabongla",
+        "Ravongla"
+      ],
+      "hi": [
+        "रवांगला"
+      ],
+      "ne": [
+        "राबाङ्ला"
+      ]
+    },
+    "geonames_id": 10630194,
+    "feature_code": "PPL",
+    "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Ravangla&count=10&countryCode=IN",
+    "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+    "verified_at": "2026-11-15T19:54:29.239420+00:00",
+    "legacy": false
+  },
+  {
+    "id": "loc:pelling",
+    "name": "Pelling",
+    "latitude": 27.30158,
+    "longitude": 88.23266,
+    "country_code": "IN",
+    "admin1": "Sikkim",
+    "admin2": "West Sikkim",
+    "parent": "loc:gyalshing_district",
+    "aliases": {
+      "en": [
+        "Pelling"
+      ],
+      "hi": [
+        "पेलिंग"
+      ],
+      "ne": [
+        "पेलिङ"
+      ]
+    },
+    "geonames_id": 7114402,
+    "feature_code": "PPL",
+    "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Pelling&count=10&countryCode=IN",
+    "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+    "verified_at": "2026-11-15T19:54:29.239423+00:00",
+    "legacy": false
+  },
+  {
+    "id": "loc:soreng",
+    "name": "Soreng",
+    "latitude": 27.16902,
+    "longitude": 88.20263,
+    "country_code": "IN",
+    "admin1": "Sikkim",
+    "admin2": "Soreng",
+    "parent": "loc:soreng_district",
+    "aliases": {
+      "en": [
+        "Soreng"
+      ],
+      "hi": [
+        "सोरेंग"
+      ],
+      "ne": [
+        "सोरेङ"
+      ]
+    },
+    "geonames_id": 1255707,
+    "feature_code": "PPL",
+    "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Soreng&count=10&countryCode=IN",
+    "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+    "verified_at": "2026-11-15T19:54:29.239426+00:00",
+    "legacy": false
+  },
+  {
+    "id": "loc:lachung",
+    "name": "Lachung",
+    "latitude": 27.6934,
+    "longitude": 88.74429,
+    "country_code": "IN",
+    "admin1": "Sikkim",
+    "admin2": "North District",
+    "parent": "loc:mangan_district",
+    "aliases": {
+      "en": [
+        "Lachung"
+      ],
+      "hi": [
+        "लाचुंग"
+      ],
+      "ne": [
+        "लाचुङ"
+      ]
+    },
+    "geonames_id": 1265346,
+    "feature_code": "PPL",
+    "source_url": "https://geocoding-api.open-meteo.com/v1/search?name=Lachung&count=5&countryCode=IN",
+    "attribution": "GeoNames via Open-Meteo geocoding; CC BY 4.0",
+    "verified_at": "2026-11-15T19:54:29.239429+00:00",
+    "legacy": false
+  }
+]

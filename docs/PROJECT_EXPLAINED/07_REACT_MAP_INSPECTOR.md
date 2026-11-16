@@ -1,0 +1,13 @@
+# React frontend, real map and AI Pipeline Inspector
+
+React keeps the original pages and adds `/map`. `Geospatial.tsx` obtains the active registry from `/locations`; `TownMap.tsx` lazy-loads `LeafletMap.tsx` with an error boundary. React Leaflet renders actual OpenStreetMap tiles at `https://tile.openstreetmap.org/{z}/{x}/{y}.png`, marker coordinates and automatic bounds. This is an interactive geographic basemap with zoom/pan, not a background screenshot.
+
+Markers and accessible town checkboxes select at most two points. Selected markers change styling; Enter/Space work on focusable markers. Date/source controls request real environmental results explicitly. A comparison link carries the selected town IDs into the existing Comparison page; that page's subsequent trained submission still requires genuine checkpoints. Selecting markers itself is not NLP inference.
+
+Tooltips and panels distinguish unavailable data from actual results. Tile failure shows a notice while keyboard selectors and retrieval remain usable. Attribution remains visible. Browser tests verify controls, selection, handoff, tile failure and Inspector; live evidence separately records successful actual tile loading and Open-Meteo retrieval. Managed-cloud proxy certificates affected one headless tile test; certificate pinning used for verification was not added to the product.
+
+`Insights.tsx` presents coverage, daily extremes, variation, monthly retrieved portions and readable comparison names. `Measurements.tsx` separately presents humidity/wind units, summaries, charts and source evidence. Metrics are formatted for display without altering stored numeric precision. Native expandable sections retain detailed provenance.
+
+`PipelineInspector.tsx` is collapsed by default. It shows actual returned language, mode, intent, spans/offsets/canonical IDs, confidence, structured query and warnings; environmental provider/period/units/coverage/coordinates; and configured/returned GenAI status and validated claims. Fields not exposed by the backend are labelled as unavailable, not guessed. Bypassed stages are labelled not invoked. It does not display raw prompts, API keys or chain-of-thought. A rule-demo score is not trained-model confidence.
+
+Accessibility includes labelled forms, keyboard markers, visible selection and expandable evidence; mobile layout is responsive. Third-party tile access remains network-dependent. React Leaflet/core uses the Hippocratic 2.1 licence; Leaflet is BSD-2-Clause; OSM data and tile-use terms require attribution and appropriate usage. This prototype does not bulk-download tiles.

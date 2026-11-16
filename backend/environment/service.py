@@ -25,7 +25,7 @@ def retrieve_query(query: StructuredQuery, source_mode='live', provider=None, to
     if not query.variables or any(v not in (Variable.TEMPERATURE, Variable.PRECIPITATION) for v in query.variables):
         return ask('Choose TEMPERATURE or PRECIPITATION. Other variables are not connected.')
     if not 1 <= len(query.locations) <= 3 or any(loc.id not in LOCATIONS for loc in query.locations):
-        return ask('Choose Gangtok, Namchi or Mangan town (not a district, state or river). At most three towns are supported.')
+        return ask('Choose a supported town from /locations, not a district, state or river. At most three town points per query.')
     if len({loc.id for loc in query.locations}) != len(query.locations):
         return ask('Choose distinct towns for comparison.')
     if len(query.locations) > 1 and query.operation != Operation.COMPARE:

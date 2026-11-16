@@ -5,6 +5,8 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 from backend.genai.facts import KEYS, compile_facts
 from backend.genai.questions import select_facts
+from backend.environment.registry import active_towns
+from backend.environment.measurements import enabled as measurements_enabled
 from backend.presentation.knowledge import Knowledge, knowledge_answer, key_of
 
 
@@ -38,9 +40,12 @@ def route_question(body, contexts):
         return RouteResponse(category='contextual',message='Use the existing validated environmental session; no new retrieval.')
     if re.search(r'\b(?:predict|exact time|next|tomorrow).*\b(?:earthquake|landslide)\b',key):
         return RouteResponse(category='unsupported',message='TerraMind cannot predict earthquake or landslide timing. It supports descriptive temperature and rainfall results, not hazard forecasts.')
-    if re.search(r'(?<![\wऀ-ॿ])(?:gyalshing|pakyong|rangpo|singtam|ravangla|pelling|jorethang|soreng|delhi|kathmandu)(?![\wऀ-ॿ])',key):
-        return RouteResponse(category='unsupported',message='This location is not connected to verified retrieval. Choose Gangtok, Namchi or Mangan town points; no district or state averages.')
-    if re.search(r'(?<![\wऀ-ॿ])(?:humidity|wind(?: speed| direction)?|pressure|snowfall|cloud cover|air quality|ndvi|soil moisture|आर्द्रता|आर्द्रता|हावा|हवा|हिमपात)(?![\wऀ-ॿ])',key):
+    blocked = [name for name in ('gyalshing','pakyong','rangpo','singtam','ravangla','pelling','jorethang','soreng','delhi','kathmandu') if 'loc:'+name not in active_towns()]
+    if any(re.search(r'(?<![\wऀ-ॿ])'+name+r'(?![\wऀ-ॿ])',key) for name in blocked):
+        return RouteResponse(category='unsupported',message='This location is not connected to verified retrieval. Choose supported town points from /locations; no district or state averages.')
+    terms = r'wind direction|gusts?|pressure|snowfall|cloud cover|air quality|ndvi|soil moisture|हिमपात|दिशा'
+    if not measurements_enabled(): terms += r'|humidity|wind(?: speed)?|आर्द्रता|हावा|हवा'
+    if re.search(r'(?<![\wऀ-ॿ])(?:'+terms+r')(?![\wऀ-ॿ])',key):
         return RouteResponse(category='unsupported',message='That measurement is not connected. Choose air temperature, rainfall or total precipitation; no measurement is silently substituted.')
     if re.search(r'\b(?:gangtok|namchi|mangan)\s+or\s+(?:gangtok|namchi|mangan)\b',key):
         return RouteResponse(category='clarification',message='Choose one town, or explicitly ask to compare two towns for the same period.')

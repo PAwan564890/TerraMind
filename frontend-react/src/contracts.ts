@@ -5,6 +5,12 @@ export interface Health {
   detail?: string | null;
 }
 export interface System {
+  capabilities?: {
+    extended_locations: boolean;
+    additional_measurements: string[];
+    locations_endpoint: string;
+    insights_endpoint: string;
+  };
   genai: {
     configured: boolean;
     provider: string;
@@ -152,6 +158,8 @@ export interface Run {
   mode: Mode;
   source: SourceMode;
   analysis: Analysis;
+  measurements?: MeasurementResponse;
+  insights?: InsightResponse;
   bundle: Bundle | null;
 }
 
@@ -172,4 +180,125 @@ export interface QuestionRoute {
     label: string;
     sources: { name: string; url: string }[];
   };
+}
+
+export interface TownPoint {
+  id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  country_code: string;
+  admin1: string;
+  admin2: string | null;
+  aliases: Record<string, string[]>;
+  geonames_id: number;
+  source_url: string;
+  attribution: string;
+  verified_at: string;
+  legacy: boolean;
+}
+export interface LocationRegistry {
+  extended_enabled: boolean;
+  locations: TownPoint[];
+  supplemental_variables: string[];
+  limitation: string;
+}
+export interface EventDay {
+  value: number;
+  date: string;
+  tied_dates: string[];
+}
+export interface TemporalInsight {
+  location_name?: string;
+  location_id: string;
+  start: string;
+  end: string;
+  timezone: string;
+  temperature_days: { highest: EventDay | null; lowest: EventDay | null };
+  rainfall_days: { highest: EventDay | null; lowest: EventDay | null };
+  period_temperature_range_c: number | null;
+  daily_variation: { date: string; temperature_range_c: number | null }[];
+  day_to_day: {
+    date: string;
+    previous_date: string;
+    temperature_mean_change_c: number | null;
+  }[];
+  monthly: {
+    month: string;
+    retrieved_days: number;
+    temperature_valid_days: number;
+    rainfall_valid_days: number;
+    temperature_mean_c: number | null;
+    rainfall_total_mm: number | null;
+    period_start: string;
+    period_end: string;
+    label: string;
+  }[];
+  coverage: Record<
+    string,
+    { valid: number; missing: number; expected: number }
+  >;
+  tie_rule: string;
+  limitation: string;
+}
+export interface InsightResponse {
+  status: string;
+  source_mode?: string;
+  message?: string | null;
+  results: TemporalInsight[];
+  comparisons: {
+    left: string;
+    right: string;
+    left_name?: string;
+    right_name?: string;
+    warmer_name?: string | null;
+    wetter_name?: string | null;
+    start: string;
+    end: string;
+    temperature_difference_c: number | null;
+    rainfall_difference_mm: number | null;
+    warmer: string | null;
+    wetter: string | null;
+    warnings: string[];
+  }[];
+}
+export interface MeasurementResponse {
+  status: string;
+  message: string | null;
+  errors: string[];
+  query: Query;
+  results: {
+    location_id: string;
+    location_name: string;
+    start: string;
+    end: string;
+    timezone: string;
+    data_kind: string;
+    source: string;
+    source_url: string;
+    attribution: string;
+    retrieved_at: string;
+    requested_latitude: number;
+    requested_longitude: number;
+    grid_latitude: number;
+    grid_longitude: number;
+    daily: ({ date: string } & Record<string, number | string | null>)[];
+    summary: Record<
+      string,
+      {
+        mean: number | null;
+        minimum: number | null;
+        maximum: number | null;
+        unit: string;
+        valid_days: number;
+        missing_days: number;
+        expected_days: number;
+      }
+    >;
+    limitations: string[];
+  }[];
+}
+export interface SelectedBundle extends Bundle {
+  insights: InsightResponse;
+  inference: string;
 }
